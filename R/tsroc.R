@@ -1,72 +1,90 @@
-#' @title Time Dependent SROC without PB
+#' @title Time-dependent SROC curve without publication bias
 #'
-#' @description Time Dependent Sensitivity Analysis Old (not recommended)
+#' @description This function estimates the time-dependent SROC curve and SAUC
+#' in meta-analysis of prognostic studies, without considering publication bias.
+#' At each time point, the time-dependent sensitivity and specificity are reconstructed from the published
+#' survival probabilities of the test-positive and test-negative groups (Combescure et al., 2016),
+#' and the bivariate random-effects model of the logit-transformed sensitivity and specificity
+#' (with the within-study covariance) is fitted by the maximum likelihood method.
 #'
-#' @param HR.data Data with variable names
-#' \{study, HR, ci.low, ci.up, n1, n0\} .
-#' If not, please Set the name in a later argument or change the variable names.
-#' 'study' should be a number that is unified with the two data below
+#' @inheritParams tsrocsa.lrt
 #'
-#' @param OS.data Data with variable names
-#' \{study, t, n1, n0, s1, s0\} .
-#' If not, please Set the name in a later argument or change the variable names.
-#' \{n1,n0\} is same with HR.data.Either can be omitted.
+#' @param data.os A data frame of the survival data, with one row for each study and each time point.
+#' Within each study, the rows should be sorted in ascending order of time.
+#' If \code{data.os = NULL} (default), \code{study.os}, \code{time.os}, \code{n1.os}, \code{n0.os},
+#' \code{s1.os}, and \code{s0.os} are evaluated in the calling environment.
+#' @param data.lnhr A data frame of lnHR, with one row for each study.
+#' If \code{data.lnhr = NULL} (default), \code{study.lnhr}, \code{lnhr}, and \code{var.lnHR}
+#' are evaluated in the calling environment.
+#' @param data.mct A data frame of the median follow-up time, with one row for each study reporting it.
+#' It is used to estimate the censoring distribution common to all the studies
+#' (see details in \code{\link{tsrocsa.lrt}}).
+#' If \code{data.mct = NULL} (default), \code{time.med}, \code{n1.med}, \code{n0.med},
+#' \code{s1.med}, and \code{s0.med} are evaluated in the calling environment.
 #'
-#' @param MCT.data Data with variable names
-#' \{study, n1.mct, n0.mct, s1.med.mct, s0.med.mct, med.year\}
-#' If not, please Set the name in a later argument or change the variable names.
-#'
-#'
-#' @param p Specified probability of selection (or publication); Pr(select) = p
-#'
-#' @param period Convert the units of t to years. When the unit is month, use 12 as an argument.
-#'
-#' @param ci.level The significant value for confidence interval of SAUC.
-#'
-#' @param eta.range eta range
-#'
-#' @param init.eta initial eta
-#'
-#' @param sauc.type Two types of SAUC values.
-#' Area under the Reitsma's SROC curve(\code{"sroc"}) or under the Rutter's HSROC curve (\code{"hsroc"}).
-#'
-#'
-#' @param study  The three input data sets are unified with the same \code{study} number.
-#' Use the name of the data field as an argument
-#'
-#' @param time time column name
-#'
-#' @param n1  OS.data n1 name
-#' @param n0  OS.data n0 name
-#' @param s1  OS.data s1 name
-#' @param s0  OS.data s0 name
-#'
-#' @param n1.mct1  MCT.data n1 name
-#' @param n0.mct  MCT.data n0 name
-#' @param s1.med.mct  MCT.data s1 name
-#' @param s0.med.mct  MCT.data s0 name
-#'
-#' @param med.year MCT.data time
-#'
-#' @param ... See other augments in function \code{\link[stats]{uniroot}}.
-#'
-#' @return
-#' mu tau
-#'
-#' @examples
-#'
-#' res<-tdsaold(HR,OS,MCT,p=c(1,0.8,0.6),s1.med.mct = s1_mct,s0.med.mct = s0_mct,period = 12,med.year = mct_mo)
-#' plot(res)
+#' @param parset A list of the settings for the estimation, which updates the default settings.
+#' Bad initial values and bounds may cause non-convergence.
+#' \itemize{
+#'     \item \code{inital.values}: The initial values of \code{c(mu1, mu2, tau1, tau2, rho)}.
+#'     If it is not a vector of length 5 (default), the estimates by \code{\link[mixmeta]{mixmeta}} are used.
+#'     \item \code{mu.bound}: \eqn{\mu_1}{mu1} and \eqn{\mu_2}{mu2} are searched within
+#'     \code{[-mu.bound, mu.bound]}. The default is 5.
+#'     \item \code{tau.bound}: \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2} are searched within
+#'     \code{[eps, tau.bound]}. The default is 5.
+#'     \item \code{eps}: The lower bound of \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2}. The default is \code{1e-5}.
+#'   }
 #'
 #' @details
-#' \describe{
-#' \item{Continuity correction}{\url{https://en.wikipedia.org/wiki/Continuity_correction}}
+#' The time-dependent sensitivity and specificity, and their within-study variances and covariance
+#' are calculated in the same way as \code{\link{tsrocsa.lrt}}.
+#' \code{study.lnhr}, \code{lnhr}, and \code{var.lnHR} are required as input,
+#' but lnHR is not used in the estimation of this function.
+#'
+#' @return An object of class \code{"srocsa"}:
+#' a list with one element for each time point (named by \code{time.points}).
+#' Each element is the same as the output of \code{\link{sroc}}.
+#' The results can be shown by \code{\link{print.srocsa}}, \code{\link{summary.srocsa}}, and \code{\link{plot.srocsa}}.
+#'
+#' @references
+#' Combescure C, Daures JP, Foucher Y (2016).
+#' A literature-based approach to evaluate the predictive capacity of a marker using
+#' time-dependent summary receiver operating characteristics.
+#' \emph{Statistical Methods in Medical Research}, 25(2), 674--685.
+#' \doi{10.1177/0962280212464542}
+#'
+#' @examples
+#' ## This example requires the Ki-67 data (Ki67_OS, Ki67_HR, Ki67_MCT),
+#' ## which are not yet included in the package.
+#' \dontrun{
+#' ## load data
+#' data(Ki67_OS)
+#' data(Ki67_HR)
+#' data(Ki67_MCT)
+#'
+#' ## lnHR and its variance from HR and its 95 percent CI
+#' Ki67_HR$lnHR   <- log(Ki67_HR$HR)
+#' Ki67_HR$v.lnHR <- ((log(Ki67_HR$ci.up) - log(Ki67_HR$ci.low)) / (2 * qnorm(0.975)))^2
+#'
+#' fit <- tsroc(
+#'   time.points = c(24, 36, 60),
+#'   study.os = study, time.os = t, n1.os = n1, n0.os = n0, s1.os = s1, s0.os = s0,
+#'   data.os = Ki67_OS,
+#'   study.lnhr = study, lnhr = lnHR, var.lnHR = v.lnHR, data.lnhr = Ki67_HR,
+#'   time.med = mct_mo, n1.med = n1, n0.med = n0, s1.med = s1_mct, s0.med = s0_mct,
+#'   data.mct = Ki67_MCT
+#' )
+#' fit
+#' plot(fit, time = 36)
 #' }
 #'
-#' @seealso \code{\link[stats]{uniroot}},
-#' \code{\link{plot.tdsaold}}.
+#' @seealso
+#' \code{\link{tsrocsa.lrt}},
+#' \code{\link{sroc}},
+#' \code{\link{print.srocsa}},
+#' \code{\link{summary.srocsa}},
+#' \code{\link{plot.srocsa}}
 #'
-#' 
+#' @export
 tsroc <- function(
   time.points, 
   study.os, time.os, n1.os, n0.os, s1.os, s0.os, data.os=NULL,

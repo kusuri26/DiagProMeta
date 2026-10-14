@@ -1,34 +1,54 @@
-#' @title Summary ROC curves
+#' @title SAUC and its confidence interval
 #'
-#' @description caluculate SAUC and Confidence interval
+#' @description This function calculates the area under the SROC curve (SAUC) of the bivariate random-effects model,
+#' and its confidence interval when the variance-covariance matrix of the estimates is given.
 #'
-#' @param ... (1) The result from function \code{cover.dt}or\code{\link[dtametasa]{dtametasa.fc}} or \code{\link[dtametasa]{dtametasa.rc}} (single curve);
-#' (2) a matrix of which the rows are \code{c(mu1, mu2, tau1, tau2, rho)} (multiple curves);
-#' (3) a vector of \code{c(mu1, mu2, tau1, tau2, rho)} (single curve). 
-#' (4) as arguments (for example\code{mu1=0.8,mu2=0.7,tau1=0.8,tau2=0.9,rho=-0.3} )argument name is important.
+#' @param mu1 The mean of the logit-transformed sensitivity.
+#' @param mu2 The mean of the logit-transformed specificity.
+#' @param tau1 The between-study standard deviation of the logit-transformed sensitivity.
+#' @param tau2 The between-study standard deviation of the logit-transformed specificity.
+#' @param rho The between-study correlation of the logit-transformed sensitivity and specificity.
 #'
-#' @param var.matrix variance matrix
-#' 
-#' @param sroc.type Plot Reitsma's SROC curve(\code{"sroc"}) or Rutter's HSROC curve (\code{"hsroc"}),
-#' 
-#' @param ci.level Significant level of the confidence intervals.
+#' @param var.matrix The 5 x 5 variance-covariance matrix of the estimates of
+#' \code{(mu1, mu2, tau1, tau2, rho)} in this order,
+#' such as \code{var.ml} in the output of \code{\link{sroc}}.
+#' If \code{var.matrix = NULL} (default), the confidence interval is not calculated.
 #'
+#' @param ci.level The confidence level of the confidence interval, within (0, 1).
+#' It is required when \code{var.matrix} is given.
 #'
-#' @return Sauc and CI
+#' @details
+#' \describe{
+#' \item{SROC curve}{The SROC curve is
+#' \eqn{\mathrm{Se} = \mathrm{logit}^{-1}(\mu_1 - (\rho \tau_1 / \tau_2) (\mathrm{logit}(x) + \mu_2))}{Se = expit(mu1 - (rho * tau1 / tau2) * (logit(x) + mu2))},
+#' where \eqn{x} is the false positive rate (1 - specificity).
+#' SAUC is its integral over \eqn{x \in (0, 1)}{x in (0, 1)} by \code{\link[stats]{integrate}}.}
+#' \item{Confidence interval}{The standard error of SAUC is calculated by the delta method.
+#' The confidence interval is calculated on the logit scale and back-transformed,
+#' so it is not symmetric around SAUC.}
+#' }
 #'
-#' @seealso
-#' \code{\link[dtametasa]{dtametasa.fc}},
-#' \code{\link{tdsameta}}.
-#'
+#' @return A named numeric vector of \code{sauc}, \code{sauc.lb}, and \code{sauc.ub}
+#' (SAUC and the lower and upper bounds of its confidence interval).
+#' \code{sauc.lb} and \code{sauc.ub} are \code{NA} if \code{var.matrix = NULL},
+#' and \code{sauc} is \code{NA} if the integration failed.
 #'
 #' @examples
-#' res<-tdsameta(HR,OS,MCT,s1.med.mct = s1_mct,s0.med.mct = s0_mct,period = 12,med.year = mct_mo,prob=c(1,0.8))
-#' res@@par[c("sauc.sauc", "sauc.sauc.lb", "sauc.sauc.ub"),]
-#' 
+#' ## SAUC without confidence interval
+#' sauc(mu1 = 1.5, mu2 = 2, tau1 = 0.8, tau2 = 0.9, rho = -0.3)
+#'
+#' ## SAUC with confidence interval from the fitted model
+#' data(IVD)
+#' fit <- sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+#' est <- fit$par
+#' sauc(mu1 = est[1], mu2 = est[2], tau1 = est[3], tau2 = est[4], rho = est[5],
+#'      var.matrix = fit$var.ml, ci.level = 0.95)
+#'
+#' @seealso
+#' \code{\link{sroc}},
+#' \code{\link{srocsa.t}}
 #'
 #' @export
-
-
 sauc <- function(
 	mu1, mu2, tau1, tau2, rho,
 	var.matrix = NULL,

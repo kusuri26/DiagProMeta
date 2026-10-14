@@ -1,24 +1,15 @@
-#' @title Print dtametasa.fc and dtametasa.rc functions results
+#' Print method for 'meta.pb' objects
 #'
-#' @description Print results from function \code{\link{dtametasa.fc}} or \code{\link{dtametasa.rc}}
+#' Internal. It prints \code{par.all} of a fitted model.
+#' No function in this package currently returns an object of class \code{"meta.pb"}.
 #'
-#' @param x object from function \code{dtametasa.fc} or \code{dtametasa.rc}
-#' @param digits digits of the results
-#' @param ... other parameters in function \code{\link{print}}
+#' @param x An object of class \code{"meta.pb"}.
+#' @param digits The digits of the results.
+#' @param ... Other arguments in function \code{\link[base]{print}}.
 #'
-#' @importFrom stats integrate nlminb plogis pnorm qlogis uniroot qchisq qnorm
-#' @importFrom mixmeta mixmeta
-#'
-#'
-#' @seealso
-#' \code{\link{dtametasa.fc}},
-#' \code{\link{dtametasa.rc}},
-#' \code{\link[base]{print}}.
-#'
-#' @rdname print.dtametasa
-#'
-#' @export
-
+#' @exportS3Method NULL
+#' @keywords internal
+#' @noRd
 print.meta.pb <- function(x, digits = 3, ...){
 
 

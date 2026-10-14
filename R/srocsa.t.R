@@ -1,81 +1,133 @@
-#' @title Sensitivity analysis of diagnostic meta-analysis with prespecified contrast vector
+#' @title Sensitivity analysis for publication bias on the SROC curve
 #'
-#' @description Sensitivity analysis with pre-specified (fixed) contrast vector \eqn{\boldsymbol{c} = (c_1, c_2)}
+#' @description This function conducts the likelihood-based sensitivity analysis for publication bias
+#' on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC)
+#' in meta-analysis of diagnostic test accuracy (Zhou et al., 2023).
+#' The bivariate random-effects model of the logit-transformed sensitivity and specificity is combined with
+#' a selection function on the \eqn{t}-statistic of the linear combination of them
+#' with the contrast vector \eqn{(c_1, c_2)}.
+#' The model is fitted for each marginal selection probability \eqn{p} in \code{sa.p}.
 #'
-#' @param data Data with \{TP, FN, TN, FP\} data.
 #' @param TP Specify the column of true positives (TP).
 #' @param FN Specify the column of false negatives (FN).
 #' @param TN Specify the column of true negatives (TN).
 #' @param FP Specify the column of false positives (FP).
 #'
-#' @param ldata Data with logit-transformed sensitivity and specificity data and their corresponding variances.
-#' @param y1 Specify the column of logit-transformed sensitivity.
-#' @param y2 Specify the column of logit-transformed specificity.
-#' @param v1 Specify the column of the variance of logit-transformed sensitivity.
-#' @param v2 Specify the column of the variance of logit-transformed specificity.
+#' @param data A data frame containing the columns of \code{TP}, \code{FN}, \code{TN}, and \code{FP}.
+#' One row corresponds to one study. It is required.
 #'
-#' @param cc.value Imputation value for ``continuity correction''. The default is 0.5.
-#' @param cc.type Two types of ``continuity correction'' (\code{c("single", "all")}). The default is \code{"single"}.
-#' \code{"single"}: input value for single study.
-#' \code{"all"}: input value for all the cells.
+#' @param cc.value Value added to the cells for the ``continuity correction'', within (0, 1].
+#' The default is 0.5.
 #'
-#' @param p Specify the marginal (overall) selection (publication) probability; \eqn{Pr(\text{select}) = p}
-#' @param c11uare Pre-specified \eqn{c_1^2}{c1-square}.
-#' \eqn{c_2^2 = 1 - c_1^2}{c2-square = 1-c1-square}.
-#' @param ci.level The significant value for confidence interval.
-#' Area under the Reitsma's SROC curve(\code{"sroc"}) or under the Rutter's HSROC curve (\code{"hsroc"}). See details below.
+#' @param cc.type Type of the ``continuity correction'' (\code{c("single", "all")}).
+#' The default is \code{"single"}.
+#' \code{"single"}: \code{cc.value} is added to all the cells of the studies with at least one zero cell.
+#' \code{"all"}: \code{cc.value} is added to all the cells of all the studies
+#' if at least one study has a zero cell.
 #'
-#' @param parset A list of other settings for estimation. Bad initial values and estimation intervals will cause non-convergence results.
+#' @param sa.p A numeric vector of the marginal selection probabilities \eqn{p = P(\mathrm{select})}{p = P(select)},
+#' within (0, 1]. The model is fitted for each value.
+#' \eqn{p = 1} indicates no publication bias, and \eqn{\beta}{beta} and \eqn{\alpha}{alpha} are not estimated.
+#' The default is 0.9.
+#'
+#' @param c11 Pre-specified value of \eqn{c_1^2}{c1^2} within [0, 1] (\eqn{c_2^2 = 1 - c_1^2}{c2^2 = 1 - c1^2}).
+#' If \code{c11 = NULL} (default), \eqn{c_1^2}{c1^2} is estimated together with the other parameters.
+#'
+#' @param ci.level The confidence level of the confidence intervals, within (0, 1).
+#' The default is 0.95.
+#'
+#' @param parallel.ncores The number of cores used for the parallel computation over \code{sa.p}
+#' (PSOCK cluster of the package \pkg{parallel}).
+#' The default is \code{1L} (no parallel computation).
+#'
+#' @param parset A list of the settings for the estimation, which updates the default settings.
+#' Bad bounds may cause non-convergence.
 #' \itemize{
-#'     \item \code{reitsma.par0}: Initial values used for estimating the parameters in the bivariate random effects model (Reitsma's model). It should be changed by a vector of \code{c(mu1, mu2, tau1, tau2, rho)}.
-#'     \item \code{beta.interval}: The constraint interval for \eqn{\beta}{beta}. The estimation of \eqn{\beta}{b} will be searched within the interval. Take either the positive interval (>0) or the negative interval (<0).
-#'     \item \code{alpha.bound}: The constraint interval for \eqn{\alpha}{alpha}. The root of \eqn{\alpha}{a} will be searched within the interval.
-#'     \item \code{eps}: A minimum positive value.
-#'     \item \code{show.warn.message}: Whether to show the warning messages.
+#'     \item \code{mu.bound}: \eqn{\mu_1}{mu1} and \eqn{\mu_2}{mu2} are searched within
+#'     \code{[-mu.bound, mu.bound]}. The default is 5.
+#'     \item \code{tau.bound}: \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2} are searched within
+#'     \code{[eps, tau.bound]}. The default is 5.
+#'     \item \code{beta.interval}: The lower and upper bounds of \eqn{\beta}{beta}. The default is \code{c(0, 5)}.
+#'     \item \code{alpha.bound}: The root of \eqn{\alpha}{alpha} is searched starting from the interval
+#'     \code{[-alpha.bound, alpha.bound]}, which is extended if necessary (see \code{\link[stats]{uniroot}}).
+#'     The default is 5.
+#'     \item \code{eps}: The lower bound of \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2}. The default is \code{1e-5}.
 #'   }
-#' @param ... See other augments in function \code{\link[stats]{uniroot}}.
-#'
-#' @return
-#' publication bias adjusted estimations,
-#' confidence interval,
-#' convergence list,
-#' logit transformed data
-#' called function
+#' The element \code{inital.values} is not used in this function.
 #'
 #' @details
 #' \describe{
+#' \item{Bivariate model}{Let \eqn{y_{1i}}{y1i} and \eqn{y_{2i}}{y2i} be the logit-transformed sensitivity
+#' and specificity of study \eqn{i}, and \eqn{v_{1i}}{v1i} and \eqn{v_{2i}}{v2i} be their variances.
+#' \eqn{(y_{1i}, y_{2i})}{(y1i, y2i)} follows the bivariate normal distribution with mean \eqn{(\mu_1, \mu_2)}{(mu1, mu2)}
+#' and variance-covariance matrix
+#' \eqn{\mathrm{diag}(v_{1i}, v_{2i}) + \Omega}{diag(v1i, v2i) + Omega},
+#' where \eqn{\Omega}{Omega} has the between-study standard deviations \eqn{\tau_1, \tau_2}{tau1, tau2}
+#' and correlation \eqn{\rho}{rho}.}
+#' \item{Selection function}{The probability of publishing study \eqn{i} is modeled as
+#' \eqn{\Phi(\alpha + \beta t_i)}{Phi(alpha + beta * t_i)}, where
+#' \eqn{t_i = (c_1 y_{1i} + c_2 y_{2i}) / \sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}{t_i = (c1 * y1i + c2 * y2i) / sqrt(c1^2 * v1i + c2^2 * v2i)},
+#' \eqn{c_1, c_2 \ge 0}{c1, c2 >= 0}, and \eqn{c_1^2 + c_2^2 = 1}{c1^2 + c2^2 = 1}.
+#' For given \eqn{p} and the other parameters, \eqn{\alpha}{alpha} is determined such that
+#' the mean of the inverse of the marginal selection probabilities of the observed studies equals \eqn{1/p}.}
+#' \item{SAUC}{See \code{\link{sauc}}.}
+#' \item{Initial values}{The initial values of \eqn{(\mu_1, \mu_2, \tau_1, \tau_2, \rho)}{(mu1, mu2, tau1, tau2, rho)}
+#' are the estimates of the bivariate model without selection by \code{\link[mixmeta]{mixmeta}}.
+#' The initial values of \eqn{\beta}{beta} and \eqn{c_1^2}{c1^2} are 0.1.}
 #' \item{Continuity correction}{\url{https://en.wikipedia.org/wiki/Continuity_correction}}
-#'
-#' \item{Reitsma's SROC curve and the Rutter's HSROC curve}
 #' }
+#'
+#' @return An object of class \code{"srocsa"}:
+#' a list with one element for each value of \code{sa.p} and the element \code{call}.
+#' Each element is the output of \code{\link[stats]{nlminb}}
+#' (\code{par} is \code{(mu1, mu2, tau1, tau2, rho, beta)}, followed by \code{c11} when \code{c11 = NULL})
+#' with the following additional elements, or \code{NULL} if the estimation failed.
+#' \describe{
+#' \item{\code{var.ml}}{The inverse of the numerical Hessian matrix of the negative log-likelihood.
+#' When \eqn{p = 1}, only for \code{(mu1, mu2, tau1, tau2, rho)}.}
+#' \item{\code{sauc.ci}}{SAUC and its confidence interval.}
+#' \item{\code{beta}, \code{alpha}}{The estimates of \eqn{\beta}{beta} and \eqn{\alpha}{alpha}
+#' (\code{NA} when \eqn{p = 1}).}
+#' \item{\code{mu1.ci}, \code{mu2.ci}}{The estimates and confidence intervals of \eqn{\mu_1}{mu1} and \eqn{\mu_2}{mu2},
+#' and of the sensitivity and specificity.}
+#' \item{\code{par.all}}{All the estimates:
+#' \code{mu1}, \code{mu2}, \code{tau1^2}, \code{tau2^2}, \code{tau12}, \code{c1^2}, \code{c2^2},
+#' \code{beta}, \code{alpha}, \code{sauc}, \code{sens}, \code{spec}.}
+#' }
+#' The results can be shown by \code{\link{print.srocsa}}, \code{\link{summary.srocsa}}, and \code{\link{plot.srocsa}}.
+#'
+#' @references
+#' Zhou Y, Huang A, Hattori S (2023).
+#' A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic
+#' in meta-analysis of diagnostic test accuracy.
+#' \emph{Statistics in Medicine}, 42(6), 781--798.
+#' \doi{10.1002/sim.9643}
 #'
 #' @examples
+#' ## load data
+#' data(IVD)
 #'
-#' sa.fit1.fc <- srocpb.p.fc(data=IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7)
-#' sa.fit1.fc
+#' ## estimate c1^2
+#' fit1 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6))
+#' fit1
 #'
-#' sa.fit2.fc <- srocpb.p.fc(ldata=IVD_2, y1 = y1, y2 = y2, v1 = v1, v2 = v2, p = 0.7)
-#' sa.fit2.fc
+#' ## fix c1^2 = 0.5
+#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
+#' summary(fit2)
+#' plot(fit2)
 #'
-#' ## Specifying data and variables are required.
-#' ## The followings are wrong and cause error
-#' \dontrun{
-#' sa.fit1.fc.wrong <- srocpb.p.fc(data=IVD, TP, FN, TN, FP, p = 0.7)
+#' ## continuity correction for all the studies
+#' fit3 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = 0.8, cc.type = "all")
+#' fit3
 #'
-#' sa.fit2.fc.wrong <- srocpb.p.fc(ldata=IVD_2, y1, y2, v1, v2, p = 0.7)
-#' }
-#'
-#' sa.fit2 <- srocpb.p.fc(data=IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7,
-#'                           cc.type = "all")
-#' sa.fit2
-#'
-#' sa.fit3 <- srocpb.p.fc(IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7)
-#' sa.fit3
-#'
-#' @seealso \code{\link[stats]{uniroot}}.
+#' @seealso
+#' \code{\link{print.srocsa}},
+#' \code{\link{summary.srocsa}},
+#' \code{\link{plot.srocsa}},
+#' \code{\link{sroc}},
+#' \code{\link{sauc}}
 #'
 #' @export
-
 srocsa.t <- function(
   # data input
   TP, FN, TN, FP,

@@ -1,6 +1,6 @@
 Package: sroc.pb
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Sensitivity Analysis for Publication Bias on the SROC Curve
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -9,8 +9,17 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Likelihood-based sensitivity analysis for publication bias on the
+    summary receiver operating characteristic (SROC) curve in meta-analysis of
+    diagnostic test accuracy, and on the time-dependent SROC curve in
+    meta-analysis of prognostic studies.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+Config/roxygen2/version: 8.0.0
+Depends:
+    R (>= 3.5)
+Imports:
+    lifecycle,
+    mixmeta,
+    numDeriv

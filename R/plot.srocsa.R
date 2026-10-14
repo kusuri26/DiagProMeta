@@ -51,7 +51,6 @@
 #' plot(fit1, sroc.cols = c("black", "blue", "red"), legend.pos = "bottomright")
 #'
 #' @seealso
-#' \code{\link{plot.sroc}},
 #' \code{\link{srocsa.t}},
 #' \code{\link{tsroc}},
 #' \code{\link{tsrocsa.lrt}}
