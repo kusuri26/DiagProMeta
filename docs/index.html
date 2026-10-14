@@ -55,7 +55,197 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-Likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic (SROC) curve in meta-analysis of diagnostic test accuracy, and on the time-dependent SROC curve in meta-analysis of prognostic studies.
+<div class="section level1">
+<div class="page-header"><h1 id="diagprometa">DiagProMeta<a class="anchor" aria-label="anchor" href="#diagprometa"></a>
+</h1></div>
+<p><strong>Sensitivity Analysis for Publication Bias on the SROC Curve</strong></p>
+<p><code>DiagProMeta</code> is an R package for the likelihood-based sensitivity analysis for publication bias</p>
+<ul>
+<li>on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC) in meta-analysis of diagnostic test accuracy (Zhou et al., 2023), and</li>
+<li>on the time-dependent SROC curve and SAUC in meta-analysis of prognostic studies, where the time-dependent sensitivity and specificity are reconstructed from the published survival probabilities (Combescure et al., 2016).</li>
+</ul>
+<p>The repository is named <code>srocsa</code>, but the package name is <code>DiagProMeta</code>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The development version can be installed from GitHub:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kusuri26/srocsa"</span><span class="op">)</span></span></code></pre></div>
+<p><code>DiagProMeta</code> requires R (&gt;= 3.5) and imports <code>lifecycle</code>, <code>mixmeta</code>, and <code>numDeriv</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>The IVD data (Safdar et al., 2005) contain the 2 x 2 tables (<code>TP</code>, <code>FN</code>, <code>FP</code>, <code>TN</code>) of 33 diagnostic studies.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DiagProMeta</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IVD</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## sensitivity analysis for the marginal selection probabilities p = 1, 0.8, 0.6</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/srocsa.t.html">srocsa.t</a></span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, TN <span class="op">=</span> <span class="va">TN</span>, FP <span class="op">=</span> <span class="va">FP</span>, data <span class="op">=</span> <span class="va">IVD</span>, sa.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fit</span></span></code></pre></div>
+<pre><code>SAUC Estimates
+-------------------------------------------
+Marginal p    SAUC      SE   CI.low   CI.up
+-------------------------------------------
+p = 1        0.874   0.029    0.806   0.920
+p = 0.8      0.871   0.030    0.800   0.919
+p = 0.6      0.822   0.041    0.727   0.889</code></pre>
+<p>(Only the SAUC table is shown. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> also shows the convergence of the optimizer and the parameter estimates with their standard errors.)</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## tables of the SAUC and the parameter estimates</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">res</span><span class="op">$</span><span class="va">sauc</span></span>
+<span><span class="va">res</span><span class="op">$</span><span class="va">coef</span></span>
+<span></span>
+<span><span class="co">## SROC curves and summary points for each p</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-sroc.png" width="450" alt="SROC curves for p = 1, 0.8, 0.6"></p>
+<p><code>p = 1</code> corresponds to no publication bias. A smaller <code>p</code> assumes that a smaller proportion of the studies is published, and the change of the SROC curve and SAUC shows the potential impact of publication bias.</p>
+</div>
+<div class="section level2">
+<h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
+</h2>
+<div class="section level3">
+<h3 id="sensitivity-analysis-on-the-sroc-curve-srocsat">Sensitivity analysis on the SROC curve (<code>srocsa.t</code>)<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-on-the-sroc-curve-srocsat"></a>
+</h3>
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">y_{1i}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">y_{2i}</annotation></semantics></math> be the logit-transformed sensitivity and specificity of study <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">v_{1i}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">v_{2i}</annotation></semantics></math> be their variances. The bivariate random-effects model (Reitsma et al., 2005) is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>,</mo><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mo>,</mo><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>,</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi mathvariant="normal">Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+(y_{1i}, y_{2i})^\top \sim N\left((\mu_1, \mu_2)^\top,\ \mathrm{diag}(v_{1i}, v_{2i}) + \Omega\right),
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math> has the between-study standard deviations <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>τ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\tau_1, \tau_2</annotation></semantics></math> and correlation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>. The probability of publishing study <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is modeled by the selection function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><mi>β</mi><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi(\alpha + \beta t_i)</annotation></semantics></math> with</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>c</mi><mn>1</mn></msub><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mn>2</mn></msub><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub></mrow><msqrt><mrow><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msubsup><mi>c</mi><mn>2</mn><mn>2</mn></msubsup><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub></mrow></msqrt></mfrac><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>c</mi><mn>1</mn></msub><mo>,</mo><msub><mi>c</mi><mn>2</mn></msub><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="1.0em"></mspace><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>c</mi><mn>2</mn><mn>2</mn></msubsup><mo>=</mo><mn>1</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad c_1, c_2 \ge 0, \quad c_1^2 + c_2^2 = 1.
+</annotation></semantics></math></p>
+<p>For a given marginal selection probability <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> is determined such that the mean of the inverse of the marginal selection probabilities of the observed studies equals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">1/p</annotation></semantics></math>. The model is fitted by the maximum likelihood method for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> in <code>sa.p</code>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><annotation encoding="application/x-tex">c_1^2</annotation></semantics></math> is estimated by default, or fixed by the argument <code>c11</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt">Sensitivity analysis on the time-dependent SROC curve (<code>tsrocsa.lrt</code>)<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt"></a>
+</h3>
+<p>At each time point, the time-dependent sensitivity and specificity, and their within-study variances and covariance, are reconstructed from the survival probabilities of the test-positive and test-negative groups (Combescure et al., 2016). The logit-transformed sensitivity, specificity, and the log hazard ratio (lnHR) are modeled by the trivariate random-effects model, combined with the selection function on the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-statistic of lnHR.</p>
+<p>Three data frames are required:</p>
+<table class="table">
+<colgroup>
+<col width="12%">
+<col width="87%">
+</colgroup>
+<thead><tr>
+<th>Argument</th>
+<th>Content</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>data.os</code></td>
+<td>Survival probabilities of the two groups, one row for each study and each time point</td>
+</tr>
+<tr>
+<td><code>data.lnhr</code></td>
+<td>lnHR and its variance, one row for each study</td>
+</tr>
+<tr>
+<td><code>data.mct</code></td>
+<td>Survival probabilities at the median follow-up time, used to estimate the censoring distribution</td>
+</tr>
+</tbody>
+</table>
+<p>See <code><a href="reference/tsrocsa.lrt.html">?tsrocsa.lrt</a></code> for the details of each column.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="43%">
+<col width="56%">
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code><a href="reference/srocsa.t.html">srocsa.t()</a></code></td>
+<td>Sensitivity analysis for publication bias on the SROC curve and SAUC</td>
+</tr>
+<tr>
+<td><code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code></td>
+<td>Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC</td>
+</tr>
+<tr>
+<td><code><a href="reference/sroc.html">sroc()</a></code></td>
+<td>Bivariate random-effects model for the SROC curve without publication bias</td>
+</tr>
+<tr>
+<td><code><a href="reference/tsroc.html">tsroc()</a></code></td>
+<td>Time-dependent SROC curve without publication bias</td>
+</tr>
+<tr>
+<td><code><a href="reference/sauc.html">sauc()</a></code></td>
+<td>SAUC and its confidence interval (delta method on the logit scale)</td>
+</tr>
+<tr>
+<td>
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+</td>
+<td>Methods for the <code>"srocsa"</code> objects returned by <code><a href="reference/srocsa.t.html">srocsa.t()</a></code>, <code><a href="reference/tsroc.html">tsroc()</a></code>, and <code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="31%">
+<col width="68%">
+</colgroup>
+<thead><tr>
+<th>Data</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>IVD</code></td>
+<td>Meta-analysis of the diagnosis of intravascular device-related bloodstream infection (33 studies)</td>
+</tr>
+<tr>
+<td><code>CD64</code></td>
+<td>Meta-analysis of neutrophil CD64 for the diagnosis of bacterial infection (27 studies)</td>
+</tr>
+<tr>
+<td>
+<code>IVD_2</code>, <code>CD64_2</code>
+</td>
+<td>Logit-transformed sensitivity and specificity of <code>IVD</code> and <code>CD64</code>, with their variances</td>
+</tr>
+</tbody>
+</table>
+<p>Example data for the time-dependent analysis are not yet included in the package.</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ul>
+<li>Zhou Y, Huang A, Hattori S (2023). A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic in meta-analysis of diagnostic test accuracy. <em>Statistics in Medicine</em>, 42(6), 781–798. <a href="https://doi.org/10.1002/sim.9643" class="external-link">doi:10.1002/sim.9643</a>
+</li>
+<li>Combescure C, Daures JP, Foucher Y (2016). A literature-based approach to evaluate the predictive capacity of a marker using time-dependent summary receiver operating characteristics. <em>Statistical Methods in Medical Research</em>, 25(2), 674–685. <a href="https://doi.org/10.1177/0962280212464542" class="external-link">doi:10.1177/0962280212464542</a>
+</li>
+<li>Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005). Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews. <em>Journal of Clinical Epidemiology</em>, 58(10), 982–990. <a href="https://doi.org/10.1016/j.jclinepi.2005.02.022" class="external-link">doi:10.1016/j.jclinepi.2005.02.022</a>
+</li>
+<li>Safdar N, Fine JP, Maki DG (2005). Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection. <em>Annals of Internal Medicine</em>, 142(6), 451–466. <a href="https://doi.org/10.7326/0003-4819-142-6-200503150-00011" class="external-link">doi:10.7326/0003-4819-142-6-200503150-00011</a>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>GPL (&gt;= 3)</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
