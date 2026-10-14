@@ -1,74 +1,36 @@
-
-#' @title Summary ROC curves
+#' Plot SROC curves from a matrix of parameters
 #'
-#' @description Plot the SROC curves
+#' Internal function used in \code{plot.srocsa}.
 #'
-#' @param object (1) The result from function \code{dtametasa.fc} or \code{dtametasa.rc} (single curve);
-#' (2) a matrix of which the rows are \code{c(u1, u2, t1, t2, r)} (multiple curves);
-#' (3) a vector of \code{c(u1, u2, t1, t2, r)} (single curve).
-#'
-#' @param sroc.type Plot Reitsma's SROC curve(\code{"sroc"}) or Rutter's HSROC curve (\code{"hsroc"}),
-#'
-#' @param sroc.cols Set a vector of colors for single/multiple SROC curves.
-#' Default uses grey's colors.
-#'
-#' @param sroc.lty Line type of SROC curve.
-#'
-#' @param sroc.lwd Line width of SROC curve.
-#'
-#' @param add.spoint Whether to add the summary point on the SROC curve.
-#'
-#' @param sp.pch Type of the summary point.
-#'
-#' @param sp.cex Size of the summary point.
-#'
-#' @param plot.ci Whether to plot the confidence intervals of the SROC curve.
-#' It is only for the result from function \code{dtametasa.fc} or \code{dtametasa.rc}
-#'
-#' @param sroc.ci.col Colors of the confidence intervals.
-#'
+#' @param par.mat A matrix whose rows are \code{(mu1, mu2, tau1, tau2, rho)} (5 x k; one SROC curve for each column),
+#' or a vector of \code{(mu1, mu2, tau1, tau2, rho)} (one SROC curve).
+#' @param var.matrix The variance-covariance matrix of the estimates of \code{(mu1, mu2, tau1, tau2, rho)}.
+#' Used only when \code{plot.ci = TRUE}.
+#' @param sroc.cols A vector of colors of the SROC curves. Default uses grey colors.
+#' @param sroc.lty Line type of the SROC curves.
+#' @param sroc.lwd Line width of the SROC curves.
+#' @param add.spoint Whether to add the summary points on the SROC curves.
+#' @param sp.pch Type of the summary points.
+#' @param sp.cex Size of the summary points.
+#' @param plot.ci Whether to plot the confidence intervals of the SROC curves (requires \code{var.matrix}).
+#' @param sroc.ci.col Color of the confidence intervals (currently not used; \code{sroc.cols} is used).
 #' @param sroc.ci.lty Line type of the confidence intervals.
-#'
 #' @param sroc.ci.lwd Line width of the confidence intervals.
-#'
-#' @param ci.level Significant level of the confidence intervals.
-#'
+#' @param ci.level The confidence level of the confidence intervals.
 #' @param xlab Label of x-axis.
-#'
 #' @param ylab Label of y-axis.
-#'
-#' @param addon Whether to add the SROC curves onto an existed plot.
+#' @param addon Whether to add the SROC curves onto an existing plot.
 #' Default is \code{FALSE}, to start from a new plot.
+#' @param ... Other arguments in function \code{\link[graphics]{plot.default}} or function \code{\link[graphics]{curve}}.
 #'
-#' @param ... Other augments in function \code{\link{plot.default}} or function \code{\link{curve}}
+#' @return No return value; called for the side effect of plotting.
 #'
 #' @importFrom grDevices gray.colors
 #' @importFrom graphics curve points
 #'
-#' @return SROC curves
-#'
-#' @seealso
-#' \code{\link[graphics]{plot.default}},
-#' \code{\link[graphics]{points}},
-#' \code{\link[graphics]{curve}},
-#' \code{\link{dtametasa.fc}},
-#' \code{\link{dtametasa.rc}}.
-#'
-#'
-#' @examples
-#' p.seq <- seq(1, 0.5, -0.1)
-#' sa1.seq <- sapply(p.seq, function (p) dtametasa.fc(IVD, p)$par)
-#'
-#' SROC(sa1.seq, sroc.type = "sroc")
-#' SROC(sa1.seq, sroc.type = "hsroc")
-#'
-#' sa.fit <- dtametasa.fc(IVD, p = 0.7, sauc.type = "sroc")
-#' sa.fit
-#' SROC(sa.fit, sroc.type = "sroc", pch = 19, plot.ci = TRUE)
-#' SROC(sa.fit, sroc.type = "hsroc", pch = 19, plot.ci = TRUE)
-#'
-#' @export
-
+#' @exportS3Method NULL
+#' @keywords internal
+#' @noRd
 plot.sroc <- function(
   # object,
   # sroc.type = c("sroc", "hsroc"),

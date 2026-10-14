@@ -1,40 +1,37 @@
-#' tteICE: Treatment Effect Estimation for Time-to-Event Data with Intercurrent Events
+#' Sensitivity Analysis for Publication Bias on the SROC Curve
 #'
-#' This package aims to analyze treatment effects in clinical trials with time-to-event outcomes is complicated by intercurrent events.
-#' This package implements methods for estimating and inferring the cumulative incidence functions for time-to-event (TTE) outcomes with intercurrent events (ICE) under the five strategies outlined in the ICH E9 (R1) addendum, see Deng (2025) <doi:10.1002/sim.70091>.
-#' This package can be used for analyzing data from both randomized controlled trials and observational studies.
-#' In general, the data involve a primary outcome event and, potentially, an intercurrent event.
-#' Two data structures are allowed: competing risks, where only the time to the first event is recorded,
-#' and semicompeting risks, where the times to both the primary outcome event and intercurrent event (or censoring) are recorded.
-#' For estimation methods, nonparametric estimation (which does not use covariates) and semiparametrically efficient estimation are presented.
+#' This package implements the likelihood-based sensitivity analysis for publication bias
+#' on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC)
+#' in meta-analysis of diagnostic test accuracy, see Zhou et al. (2023) \doi{10.1002/sim.9643}.
+#' It also provides the sensitivity analysis on the time-dependent SROC curve in meta-analysis of prognostic studies,
+#' where the time-dependent sensitivity and specificity are reconstructed from the published survival probabilities,
+#' see Combescure et al. (2016) \doi{10.1177/0962280212464542}.
 #'
 #' Main functions:
 #' \itemize{
-#' 	 \item \code{\link[tteICE]{tteICE}} Using formula to fit cumulative incidence functions (CIFs) for competing/semicompeting risk time-to-event data with intercurrent events.
-#'   \item \code{\link[tteICE]{scr.tteICE}} Fit CIFs for semicompeting risk time-to-event data with intercurrent events.
-#'   \item \code{\link[tteICE]{surv.tteICE}} Fit CIFs for competing risk time-to-event with intercurrent events.
-#'   \item \code{\link[tteICE]{tteICEShiny}} Interactive Shiny app for the 'tteICE' package
-#'   }
+#'   \item \code{\link{srocsa.t}} Sensitivity analysis for publication bias on the SROC curve and SAUC.
+#'   \item \code{\link{tsrocsa.lrt}} Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC.
+#'   \item \code{\link{sroc}} Bivariate random-effects model for the SROC curve without publication bias.
+#'   \item \code{\link{tsroc}} Time-dependent SROC curve without publication bias.
+#'   \item \code{\link{sauc}} SAUC and its confidence interval.
+#' }
 #'
 #' Results output functions:
 #' \itemize{
-#' 	 \item \code{\link[tteICE]{plot.tteICE}} Plot results from 'tteICE' objects.
-#'   \item \code{\link[tteICE]{print.tteICE}} Print a short summary of results from 'tteICE' objects
-#'   \item \code{\link[tteICE]{summary.tteICE}} Summarize results from 'tteICE' objects
-#'   \item \code{\link[tteICE]{predict.tteICE}} Predict risks for 'tteICE' objects at specific time 
-#'   \item \code{\link[tteICE]{coef.tteICE}} Show the coefficient for 'tteICE' objects
-#'   \item \code{\link[tteICE]{bshaz.tteICE}} Extract the baseline hazards for 'tteICE' objects
-#'   \item \code{\link[tteICE]{zph.tteICE}} Perform a test for the proportional hazards assumption for the Cox models in 'tteICE' objects
-#'
-#'
+#'   \item \code{\link{print.srocsa}} Print the main results from 'srocsa' objects.
+#'   \item \code{\link{summary.srocsa}} Summarize the results from 'srocsa' objects.
+#'   \item \code{\link{plot.srocsa}} Plot the SROC curves from 'srocsa' objects.
 #' }
+#'
 #' Example data:
 #' \itemize{
-#'   \item \code{\link{bmt}} Data from Section 1.3 of Klein and Moeschberger (1997)
+#'   \item \code{\link{IVD}}, \code{\link{CD64}} Meta-analyses of diagnostic studies.
+#'   \item \code{\link{IVD_2}}, \code{\link{CD64_2}} Logit-transformed data of \code{IVD} and \code{CD64}.
 #' }
 #'
-#' @docType package
-#' @name tteICE-package
-#'
+#' @importFrom stats integrate nlminb plogis pnorm qlogis qnorm uniroot
+#' @importFrom stats complete.cases na.omit setNames
+#' @importFrom utils head tail modifyList
+#' @importFrom mixmeta mixmeta
 #' @importFrom lifecycle deprecated
 "_PACKAGE"

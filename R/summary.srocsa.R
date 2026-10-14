@@ -1,8 +1,9 @@
 #' @title Summary method for 'srocsa' objects
 #'
 #' @description This function summarizes the results:
-#' the main results (see \code{\link{print.srocsa}}) and all the elements of the fitted models
-#' at each time point and each marginal selection probability \eqn{p}.
+#' the main results (see \code{\link{print.srocsa}}) and the estimates of all the parameters
+#' (\code{par.all}) of the fitted models at each time point and each marginal selection probability \eqn{p}.
+#' All the elements of the fitted models are kept in \code{blocks} of the returned object.
 #'
 #' @param object
 #' A fitted object returned by the function \code{srocsa.t}, \code{tsroc}, or \code{tsrocsa.lrt}.

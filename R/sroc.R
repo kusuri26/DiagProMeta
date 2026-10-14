@@ -1,82 +1,69 @@
-#' @title Sensitivity analysis of diagnostic meta-analysis with prespecified contrast vector
+#' @title Bivariate random-effects model for the SROC curve without publication bias
 #'
-#' @description Sensitivity analysis with pre-specified (fixed) contrast vector \eqn{\boldsymbol{c} = (c_1, c_2)}
+#' @description This function fits the bivariate random-effects model of the logit-transformed
+#' sensitivity and specificity (Reitsma et al., 2005) by the maximum likelihood method,
+#' and calculates the SAUC and its confidence interval.
+#' Publication bias is not considered.
 #'
-#' @param data Data with \{TP, FN, TN, FP\} data.
-#' @param TP Specify the column of true positives (TP).
-#' @param FN Specify the column of false negatives (FN).
-#' @param TN Specify the column of true negatives (TN).
-#' @param FP Specify the column of false positives (FP).
+#' @inheritParams srocsa.t
 #'
-#' @param ldata Data with logit-transformed sensitivity and specificity data and their corresponding variances.
-#' @param y1 Specify the column of logit-transformed sensitivity.
-#' @param y2 Specify the column of logit-transformed specificity.
-#' @param v1 Specify the column of the variance of logit-transformed sensitivity.
-#' @param v2 Specify the column of the variance of logit-transformed specificity.
+#' @param data A data frame containing the columns of \code{TP}, \code{FN}, \code{FP}, and \code{TN}.
+#' One row corresponds to one study.
+#' If \code{data = NULL} (default), \code{TP}, \code{FN}, \code{FP}, and \code{TN} are evaluated
+#' in the calling environment (e.g., numeric vectors).
 #'
-#' @param correct.value Imputation value for ``continuity correction''. The default is 0.5.
-#' @param correct.type Two types of ``continuity correction'' (\code{c("single", "all")}). The default is \code{"single"}.
-#' \code{"single"}: input value for single study.
-#' \code{"all"}: input value for all the cells.
-#'
-#' @param p Specify the marginal (overall) selection (publication) probability; \eqn{Pr(\text{select}) = p}
-#' @param c1.square Pre-specified \eqn{c_1^2}{c1-square}.
-#' \eqn{c_2^2 = 1 - c_1^2}{c2-square = 1-c1-square}.
-#' @param ci.level The significant value for confidence interval.
-#' Area under the Reitsma's SROC curve(\code{"sroc"}) or under the Rutter's HSROC curve (\code{"hsroc"}). See details below.
-#'
-#' @param estim.set A list of other settings for estimation. Bad initial values and estimation intervals will cause non-convergence results.
+#' @param parset A list of the settings for the estimation, which updates the default settings.
+#' Bad initial values and bounds may cause non-convergence.
 #' \itemize{
-#'     \item \code{reitsma.par0}: Initial values used for estimating the parameters in the bivariate random effects model (Reitsma's model). It should be changed by a vector of \code{c(mu1, mu2, tau1, tau2, rho)}.
-#'     \item \code{beta.interval}: The constraint interval for \eqn{\beta}{beta}. The estimation of \eqn{\beta}{b} will be searched within the interval. Take either the positive interval (>0) or the negative interval (<0).
-#'     \item \code{alpha.interval}: The constraint interval for \eqn{\alpha}{alpha}. The root of \eqn{\alpha}{a} will be searched within the interval.
-#'     \item \code{eps}: A minimum positive value.
-#'     \item \code{show.warn.message}: Whether to show the warning messages.
+#'     \item \code{inital.values}: The initial values of \code{c(mu1, mu2, tau1, tau2, rho)}.
+#'     The default is \code{c(0.1, 0.1, 0.1, 0.1, -0.1)}.
+#'     If it is \code{NULL} or not a vector of length 5, the estimates by \code{\link[mixmeta]{mixmeta}} are used.
+#'     \item \code{mu.bound}: \eqn{\mu_1}{mu1} and \eqn{\mu_2}{mu2} are searched within
+#'     \code{[-mu.bound, mu.bound]}. The default is 5.
+#'     \item \code{tau.bound}: \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2} are searched within
+#'     \code{[eps, tau.bound]}. The default is 5.
+#'     \item \code{eps}: The lower bound of \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2}. The default is \code{1e-5}.
 #'   }
-#' @param ... See other augments in function \code{\link[stats]{uniroot}}.
-#'
-#' @return
-#' publication bias adjusted estimations,
-#' confidence interval,
-#' convergence list,
-#' logit transformed data
-#' called function
 #'
 #' @details
 #' \describe{
+#' \item{Bivariate model}{See details in \code{\link{srocsa.t}}.}
+#' \item{SAUC}{See \code{\link{sauc}}.}
 #' \item{Continuity correction}{\url{https://en.wikipedia.org/wiki/Continuity_correction}}
-#'
-#' \item{Reitsma's SROC curve and the Rutter's HSROC curve}
 #' }
+#'
+#' @return The output of \code{\link[stats]{nlminb}}
+#' (\code{par} is \code{(mu1, mu2, tau1, tau2, rho)}; \code{tau1} and \code{tau2} are standard deviations)
+#' with the following additional elements.
+#' If \code{\link[stats]{nlminb}} failed, an object of class \code{"try-error"}.
+#' \describe{
+#' \item{\code{var.ml}}{The inverse of the numerical Hessian matrix of the negative log-likelihood.}
+#' \item{\code{sauc.ci}}{SAUC and its confidence interval.}
+#' \item{\code{mu1.ci}, \code{mu2.ci}}{The estimates and confidence intervals of \eqn{\mu_1}{mu1} and \eqn{\mu_2}{mu2},
+#' and of the sensitivity and specificity.}
+#' \item{\code{par.all}}{All the estimates:
+#' \code{mu1}, \code{mu2}, \code{tau1^2}, \code{tau2^2}, \code{tau12}, \code{sauc}, \code{sens}, \code{spec}.}
+#' }
+#'
+#' @references
+#' Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005).
+#' Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
+#' \emph{Journal of Clinical Epidemiology}, 58(10), 982--990.
+#' \doi{10.1016/j.jclinepi.2005.02.022}
 #'
 #' @examples
+#' ## load data
+#' data(IVD)
 #'
-#' sa.fit1.fc <- srocpb.p.fc(data = IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7)
-#' sa.fit1.fc
+#' fit <- sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+#' fit$par.all
+#' fit$sauc.ci
 #'
-#' sa.fit2.fc <- srocpb.p.fc(ldata = IVD_2, y1 = y1, y2 = y2, v1 = v1, v2 = v2, p = 0.7)
-#' sa.fit2.fc
+#' @seealso
+#' \code{\link{srocsa.t}},
+#' \code{\link{sauc}}
 #'
-#' ## Specifying data and variables are required.
-#' ## The followings are wrong and cause error
-#' \dontrun{
-#' sa.fit1.fc.wrong <- srocpb.p.fc(data = IVD, TP, FN, TN, FP, p = 0.7)
-#'
-#' sa.fit2.fc.wrong <- srocpb.p.fc(ldata = IVD_2, y1, y2, v1, v2, p = 0.7)
-#' }
-#'
-#' sa.fit2 <- srocpb.p.fc(
-#'   data = IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7,
-#'   correct.type = "all"
-#' )
-#' sa.fit2
-#'
-#' sa.fit3 <- srocpb.p.fc(IVD, TP = TP, FN = FN, TN = TN, FP = FP, p = 0.7)
-#' sa.fit3
-#'
-#' @seealso \code{\link[stats]{uniroot}}.
-#'
-
+#' @export
 sroc <- function(
   TP, FN, FP, TN,
   data = NULL,

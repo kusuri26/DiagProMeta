@@ -1,5 +1,7 @@
 #' @title Print the summary of 'srocsa'
-#' @description Print the summary of 'srocsa'
+#' @description Print the summary of 'srocsa':
+#' the main results (see \code{\link{print.srocsa}}) and the estimates of all the parameters
+#' (\code{par.all}) of the fitted models.
 #' @param x
 #' An object returned by the function \code{summary.srocsa}.
 #' @param digits
@@ -21,10 +23,14 @@ print.summary.srocsa <- function(x, digits = 3, ...) {
   ## main results ----
   for (b in x$blocks) .srocsa.print.block(b, digits = digits)
 
-  ## all the elements of the fitted models ----
+  ## all the estimates (par.all) of the fitted models ----
   cat("==================================================\n")
   cat("All elements of the fitted models\n")
   cat("==================================================\n\n")
+
+  ## wrap par.all at the width of the rules (50 characters)
+  op <- options(width = 50)
+  on.exit(options(op), add = TRUE)
 
   for (b in x$blocks) {
     for (i in seq_along(b$fits)) {
@@ -35,17 +41,13 @@ print.summary.srocsa <- function(x, digits = 3, ...) {
 
       fit <- b$fits[[i]]
 
-      if (!is.list(fit)) {
+      if (!is.list(fit) || is.null(fit$par.all)) {
         cat("Estimation failed\n\n")
         next
       }
 
-      for (nm in names(fit)) {
-        cat("$", nm, "\n", sep = "")
-        v <- fit[[nm]]
-        print(if (is.numeric(v)) round(v, digits) else v, ...)
-        cat("\n")
-      }
+      print(round(fit$par.all, digits), ...)
+      cat("\n")
     }
   }
 
