@@ -14,7 +14,10 @@
 #'   \item{type}{Diagnostic type}
 #'   \item{cutoff}{Cutoff information}
 #' }
-#'@source \url{http://www.ncbi.nlm.nih.gov/pubmed/9315770}
+#' @source Safdar N, Fine JP, Maki DG (2005).
+#' Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection.
+#' \emph{Annals of Internal Medicine}, 142(6), 451--466.
+#' \doi{10.7326/0003-4819-142-6-200503150-00011}
 
 "IVD"
 

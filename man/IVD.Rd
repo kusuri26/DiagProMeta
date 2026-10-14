@@ -18,7 +18,10 @@ A data frame with 33 rows (studies) and 8 variables:
 }
 }
 \source{
-\url{http://www.ncbi.nlm.nih.gov/pubmed/9315770}
+Safdar N, Fine JP, Maki DG (2005).
+Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection.
+\emph{Annals of Internal Medicine}, 142(6), 451--466.
+\doi{10.7326/0003-4819-142-6-200503150-00011}
 }
 \usage{
 IVD

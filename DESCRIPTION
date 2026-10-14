@@ -1,12 +1,24 @@
-Package: sroc.pb
+Package: DiagProMeta
 Type: Package
 Title: Sensitivity Analysis for Publication Bias on the SROC Curve
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
+      "Zhou", "Yi",
       email = "jane@example.com",
       role = c("aut", "cre")
+    ),
+    person(
+      "Ryota", "Kinugawa",
+      role = c("ctb")
+    ),
+    person(
+      "Kota", "Nakaike",
+      role = c("ctb")
+    ),
+    person(
+      "Yamato", "Hashimoto",
+      role = c("ctb")
     )
   )
 Description: Likelihood-based sensitivity analysis for publication bias on the
