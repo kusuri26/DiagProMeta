@@ -1,7 +1,7 @@
 url: https://https://kusuri26.github.io/DiagProMeta/
 template:
   bootstrap: 5
-  bootswatch: flatly
+  bootswatch: sandstone
 
 # navbar:
 #   components:

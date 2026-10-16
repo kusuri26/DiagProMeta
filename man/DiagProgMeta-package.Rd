@@ -37,7 +37,7 @@ Example data:
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://https://kusuri26.github.io/DiagProgMeta/}
+  \item \url{https://https://kusuri26.github.io/DiagProgMeta}
   \item Report bugs at \url{https://https://kusuri26.github.io/DiagProgMeta/issues}
 }
 
