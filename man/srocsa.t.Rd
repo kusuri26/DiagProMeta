@@ -133,7 +133,7 @@ fit1 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8
 fit1
 
 ## fix c1^2 = 0.5
-fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6, 0.4), c11 = 0.5)
+fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
 summary(fit2)
 plot(fit2)
 

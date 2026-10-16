@@ -1,7 +1,7 @@
-#' @title
-#' Plot method for 'srocsa' objects
+#' @title Plot the sensitivitya analysis of the SROC curves
 #'
 #' @description
+#' Plot method for 'srocsa' objects
 #' This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p},
 #' from the sensitivity analysis by \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
 #' For \code{\link{srocsa.t}}, one plot is created.

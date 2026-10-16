@@ -114,7 +114,7 @@
 #' fit1
 #'
 #' ## fix c1^2 = 0.5
-#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6, 0.4), c11 = 0.5)
+#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
 #' summary(fit2)
 #' plot(fit2)
 #'
@@ -155,10 +155,6 @@ srocsa.t <- function(
 
   ## check parameter input ----
   cc.type <- match.arg(cc.type)
-
-  if (!is.element(cc.type, c("single", "all"))) {
-    stop(mstyle$stop("Correction methods used in continuity correction can only be 'single' or 'all'."))
-  }
 
   if (cc.value <=0 | cc.value>1) {
     stop("The value of cc.value must be positive and within (0, 1]",  call. = FALSE)

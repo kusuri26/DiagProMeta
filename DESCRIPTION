@@ -1,4 +1,4 @@
-Package: DiagProMeta
+Package: DiagProgMeta
 Type: Package
 Title: Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias
 Version: 0.1.0

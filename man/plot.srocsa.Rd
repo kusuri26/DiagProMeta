@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.srocsa.R
 \name{plot.srocsa}
 \alias{plot.srocsa}
-\title{Plot method for 'srocsa' objects}
+\title{Plot the sensitivitya analysis of the SROC curves}
 \usage{
 \method{plot}{srocsa}(
   x,
@@ -101,6 +101,7 @@ and no title for the results from \code{srocsa.t}.}
 \code{x}, invisibly. Called for the side effect of plotting.
 }
 \description{
+Plot method for 'srocsa' objects
 This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p},
 from the sensitivity analysis by \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
 For \code{\link{srocsa.t}}, one plot is created.

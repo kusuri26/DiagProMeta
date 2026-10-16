@@ -1,4 +1,4 @@
-#' @title Plot the (time-dependent) SROC curves
+#' @title Plot the SROC curves
 #'
 #' @description
 #' Plot method for objects of class \code{"sroc"} returned by

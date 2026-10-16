@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.sroc.R
 \name{plot.sroc}
 \alias{plot.sroc}
-\title{Plot the (time-dependent) SROC curves}
+\title{Plot the SROC curves}
 \usage{
 \method{plot}{sroc}(
   x,

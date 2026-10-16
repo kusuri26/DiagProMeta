@@ -1,55 +1,75 @@
-#' @title Default settings for estimation
+#' @title Default settings for the estimation
 #'
 #' @description
-#' Provides default parameter settings used for the estimation of SROC and
-#' time-dependent SROC models.
-#'
-#' \code{default.parset.sroc()} is used by \code{srocsa.t}, \code{sroc}, and
-#' \code{meta.sroc.mle}. \code{default.parset.tsroc.pb()} is used by
-#' \code{hattori.tsroc} and \code{tsrocsa.lrt}. The elements can be modified through
-#' the \code{parset} argument of these functions (see
-#' \code{\link[utils]{modifyList}}).
-#'
-#' @return A list of default estimation settings with the following elements:
-#' \describe{
-#'   \item{initial.values}{Initial values for the model parameters. In
-#'   \code{default.parset.sroc()}, this is a vector of length 5 corresponding
-#'   to \code{mu1}, \code{mu2}, \code{tau1}, \code{tau2}, and \code{rho}.
-#'   In \code{default.parset.tsroc.pb()}, it is a vector of length 9.
-#'   These values are used only by \code{meta.sroc.mle} when the length is 5;
-#'   otherwise, the initial values are calculated by \code{sroc.init}
-#'   from \code{mixmeta}.}
-#'   \item{mu.bound}{Upper bound for the mean parameters. The bounds are
-#'   \code{[-mu.bound, mu.bound]}.}
-#'   \item{tau.bound}{Upper bound for the between-study standard deviations.}
-#'   \item{beta.interval}{Lower and upper bounds for beta.}
-#'   \item{alpha.bound}{Initial search interval for alpha, given by
-#'   \code{[-alpha.bound, alpha.bound]}.}
-#'   \item{eps}{Lower bound for the between-study standard deviations.}
+#' Default settings for the estimation of the SROC and time-dependent SROC models.
+#' The elements can be modified through the \code{parset} argument of the fitting functions;
+#' the user-specified list updates the default list by \code{\link[utils]{modifyList}}.
+#' \itemize{
+#'   \item \code{default.parset.sroc()}: used by \code{\link{reitsma.sroc}} and \code{\link{srocsa.t}}
+#'   (bivariate model of the logit-transformed sensitivity and specificity).
+#'   \item \code{default.parset.tsroc.pb()}: used by \code{\link{hattori.tsroc}} and \code{\link{tsrocsa.lrt}}
+#'   (trivariate model of the logit-transformed sensitivity, specificity, and lnHR).
 #' }
 #'
-#' @keywords internal
+#' @return A list of the default settings with the following elements:
+#' \describe{
+#'   \item{\code{inital.values}}{Initial values of the parameters.
+#'   In \code{default.parset.sroc()}, a vector of length 5:
+#'   \code{c(mu1, mu2, tau1, tau2, rho)} \code{= c(0.1, 0.1, 0.1, 0.1, -0.1)}.
+#'   In \code{default.parset.tsroc.pb()}, a vector of length 9:
+#'   \code{c(mu1, mu2, mu3, tau1, tau2, tau3, rho1, rho2, rho3)}
+#'   \code{= c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.1, -0.1, -0.1)},
+#'   where \code{rho1}, \code{rho2}, and \code{rho3} are the correlations of (1, 2), (2, 3), and (1, 3)
+#'   (index 1: logit-sensitivity, 2: logit-specificity, 3: lnHR).
+#'   The values are used by the bivariate model (\code{\link{reitsma.sroc}}, and \code{\link{tsrocsa.lrt}} with \eqn{p = 1})
+#'   only when the length is 5; otherwise, the initial values are the estimates by \code{\link[mixmeta]{mixmeta}}.
+#'   They are not used by \code{\link{srocsa.t}}.}
+#'   \item{\code{mu.bound}}{The means \eqn{\mu_k}{mu_k} are searched within \code{[-mu.bound, mu.bound]}. The default is 5.}
+#'   \item{\code{tau.bound}}{The upper bound of the between-study standard deviations \eqn{\tau_k}{tau_k}. The default is 5.}
+#'   \item{\code{beta.interval}}{The lower and upper bounds of \eqn{\beta}{beta} in the selection function.
+#'   The default is \code{c(0, 5)}.}
+#'   \item{\code{alpha.bound}}{The root of \eqn{\alpha}{alpha} in the selection function is searched starting from
+#'   \code{[-alpha.bound, alpha.bound]}, which is extended if necessary (see \code{\link[stats]{uniroot}}).
+#'   The default is 5.}
+#'   \item{\code{eps}}{The lower bound of the between-study standard deviations \eqn{\tau_1}{tau1} and \eqn{\tau_2}{tau2}.
+#'   The default is \code{1e-5}.}
+#' }
 #'
+#' @examples
+#' default.parset.sroc()
+#' default.parset.tsroc.pb()
+#'
+#' ## change the bounds of the means
+#' str(utils::modifyList(default.parset.sroc(), list(mu.bound = 10)))
+#'
+#' @seealso
+#' \code{\link{reitsma.sroc}},
+#' \code{\link{srocsa.t}},
+#' \code{\link{hattori.tsroc}},
+#' \code{\link{tsrocsa.lrt}}
+#'
+#' @keywords internal
 #' @export
 default.parset.sroc <- function() {
   list(
-    inital.values = c(rep(0.1, 4), -0.1), ## initial values for mu1, mu2, tau1, tau2, rho
-    mu.bound = 5,
-    tau.bound = 5,
+    inital.values = c(rep(0.1, 4), -0.1),  ## mu1, mu2, tau1, tau2, rho
+    mu.bound      = 5,
+    tau.bound     = 5,
     beta.interval = c(0, 5),
-    alpha.bound = 5,
-    eps = 1e-5
+    alpha.bound   = 5,
+    eps           = 1e-5
   )
 }
 
+#' @rdname default.parset.sroc
 #' @export
 default.parset.tsroc.pb <- function() {
   list(
-    inital.values = c(rep(0.1, 6), rep(-0.1, 3)), ## initial values for mu1, mu2, tau1, tau2, rho
-    mu.bound = 5,
-    tau.bound = 5,
+    inital.values = c(rep(0.1, 6), rep(-0.1, 3)),  ## mu1, mu2, mu3, tau1, tau2, tau3, rho1, rho2, rho3
+    mu.bound      = 5,
+    tau.bound     = 5,
     beta.interval = c(0, 5),
-    alpha.bound = 5,
-    eps = 1e-5
+    alpha.bound   = 5,
+    eps           = 1e-5
   )
 }
