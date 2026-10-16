@@ -37,7 +37,7 @@
 #' The default is 0.95.
 #'
 #' @param parallel.ncores The number of cores used for the parallel computation over \code{sa.p}
-#' (PSOCK cluster of the package \pkg{parallel}).
+#' (PSOCK cluster of the package \pkg{parallel}); at most \code{length(sa.p)} cores are used.
 #' The default is \code{1L} (no parallel computation).
 #'
 #' @param parset A list of the settings for the estimation, which updates the default settings.
@@ -114,7 +114,8 @@
 #' fit1
 #'
 #' ## fix c1^2 = 0.5
-#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
+#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD,
+#' sa.p = c(1, 0.8, 0.6), c11 = 0.5, parallel.ncores = 2L)
 #' print(fit2)
 #' summary(fit2)
 #' plot(fit2)
@@ -161,9 +162,9 @@ srocsa.t <- function(
     stop("The value of cc.value must be positive and within (0, 1]",  call. = FALSE)
   }
 
-  # if (sa.p <=0 | sa.p>1) {
-  #   stop("The value of marginal (overall) selection probability -p- must be positive and within (0, 1]",  call. = FALSE)
-  # }
+  if (!is.numeric(sa.p) || length(sa.p) == 0 || any(is.na(sa.p)) || any(sa.p <= 0 | sa.p > 1)) {
+    stop("The values of sa.p (marginal selection probabilities) must be within (0, 1]", call. = FALSE)
+  }
 
   if (!is.null(c11) && (c11 <0 | c11>1)) {
     stop("The value of c11 must be within [0, 1]",  call. = FALSE)
@@ -223,37 +224,8 @@ f <- function(pp){
 
   }
 
-  if(parallel.ncores == 1L) {
-
-     res <- lapply(sa.p, function(pp) f(pp))
-
-  } else {
-
-    cl <- parallel::makeCluster(parallel.ncores, type = "PSOCK")
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-
-    parallel::clusterExport(
-      cl,
-      varlist = c("f", "sroc.pb.t.unfix", "sroc.pb.t.fix", "sroc.init", "llk.o.srocpb.t", "sauc", ".DID.sroc", ".QIQ.sroc"),
-      envir = environment()
-    )
-
-    ## These functions were defined outside metacont.pb(), usually in .GlobalEnv
-    parallel::clusterExport(
-      cl,
-      varlist = c("resolve_inputs", "default.parset.sroc"),
-      envir = .GlobalEnv
-    )
-
-    res <- parallel::parLapply(
-      cl,
-      X = sa.p,
-      fun = f
-    )
-
-
-  }
-
+  ## fit for each p (in parallel when parallel.ncores > 1)
+  res <- .lapply_parallel(sa.p, f, ncores = parallel.ncores)
 
   ## LOGIT-DATA  -----
     # opt$l.data <- data

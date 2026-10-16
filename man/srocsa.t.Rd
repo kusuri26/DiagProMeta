@@ -52,7 +52,7 @@ If \code{c11 = NULL} (default), \eqn{c_1^2}{c1^2} is estimated together with the
 The default is 0.95.}
 
 \item{parallel.ncores}{The number of cores used for the parallel computation over \code{sa.p}
-(PSOCK cluster of the package \pkg{parallel}).
+(PSOCK cluster of the package \pkg{parallel}); at most \code{length(sa.p)} cores are used.
 The default is \code{1L} (no parallel computation).}
 
 \item{parset}{A list of the settings for the estimation, which updates the default settings.
@@ -133,7 +133,8 @@ fit1 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8
 fit1
 
 ## fix c1^2 = 0.5
-fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
+fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD,
+sa.p = c(1, 0.8, 0.6), c11 = 0.5, parallel.ncores = 2L)
 print(fit2)
 summary(fit2)
 plot(fit2)

@@ -390,4 +390,33 @@ plot(fit, overlay = TRUE)                    # all time points in one panel
 ## interactive: press <Return> to move to the next time point
 if (interactive()) plot(fit, add.study = TRUE, study.size = "precision")
 # }
+
+## Using paralell computing
+
+fitp <- hattori.tsroc(
+  time.points = c(24, 36, 60),
+  study.os = study,
+  time.os = t, n1.os = n1, n0.os = n0,
+  s1.os = s1, s0.os = s0,
+  data.os = Ki67_OS,
+  study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+  data.lnhr = Ki67_HR,
+  time.med = mct_mo, n1.med = n1, n0.med = n0,
+  s1.med = s1_mct, s0.med = s0_mct,
+  data.mt = Ki67_MT,
+  parallel.ncores = 2L)
+print(fitp)
+#> Time-dependent SROC curve: bivariate random-effects model at each time point
+#> (Hattori and Zhou, 2016); publication bias is not considered
+#> 
+#>         K Conv  SAUC         95% CI  Sens         95% CI  Spec         95% CI
+#> t = 24 23  yes 0.713 [0.628, 0.785] 0.743 [0.647, 0.821] 0.562 [0.506, 0.617]
+#> t = 36 23  yes 0.651 [0.610, 0.690] 0.662 [0.577, 0.738] 0.570 [0.515, 0.624]
+#> t = 60 21  yes 0.647 [0.610, 0.682] 0.630 [0.567, 0.688] 0.587 [0.522, 0.649]
+#> 
+#> Estimates (tau1, tau2: between-study SDs; rho: correlation):
+#>          mu1   mu2  tau1  tau2    rho
+#> t = 24 1.063 0.249 0.911 0.520 -0.515
+#> t = 36 0.673 0.284 0.656 0.512 -0.877
+#> t = 60 0.532 0.353 0.430 0.577 -0.928
 ```

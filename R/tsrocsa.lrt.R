@@ -154,6 +154,23 @@
 #' }
 #'
 #'
+#' ## Using paralell computing
+#' fitp <- tsrocsa.lrt(
+#'   time.points = c(36, 60),
+#'   study.os = study,
+#'   time.os = t, n1.os = n1, n0.os = n0,
+#'   s1.os = s1, s0.os = s0,
+#'   data.os = Ki67_OS,
+#'   study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+#'   data.lnhr = Ki67_HR,
+#'   time.med = mct_mo, n1.med = n1, n0.med = n0,
+#'   s1.med = s1_mct, s0.med = s0_mct,
+#'   data.mt = Ki67_MT,
+#'   senp.p = c(1, 0.8),
+#'   parallel.ncores = 2L
+#' )
+#' print(fitp)
+#'
 #' @seealso
 #' \code{\link{hattori.tsroc}},
 #' \code{\link{print.srocsa}},
@@ -257,11 +274,7 @@ f <- function(data.log, pp){
 
   }
 
- ## estimation ----
-
- res <- NULL
-
-
+  ## estimation ----
   fit_at_time <- function(tt) {
 
     data.log <- convert.dt.tsroc(
@@ -277,28 +290,8 @@ f <- function(data.log, pp){
     out
   }
 
-  if (parallel.ncores == 1L) {
-    res <- lapply(time.points, fit_at_time)
-  } else {
-    cl <- parallel::makeCluster(parallel.ncores, type = "PSOCK")
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-
-    ## PSOCK workers start with empty global environments, so export every
-    ## helper reached by the fitting closure.
-    parallel::clusterExport(
-      cl,
-      varlist = c(
-        "f", "fit_at_time", "convert.dt.tsroc", "cens.eta",
-        "tsrocsa.lrt.single", "tsroc.pb.init", "clk.TNM.ml",
-        "meta.sroc.mle", "llk.p.sroc", "llk.p.tsroc", "sroc.init",
-        "sauc", ".DID.sroc", "resolve_inputs",
-        "default.parset.tsroc.pb", "default.parset.sroc"
-      ),
-      envir = environment()
-    )
-
-    res <- parallel::parLapply(cl, X = time.points, fun = fit_at_time)
-  }
+  ## fit at each time point (in parallel when parallel.ncores > 1)
+  res <- .lapply_parallel(time.points, fit_at_time, ncores = parallel.ncores)
 
   class(res) <- "srocsa"
   names(res) <- as.character(time.points)

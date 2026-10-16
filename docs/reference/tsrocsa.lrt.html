@@ -536,6 +536,75 @@ time-dependent summary receiver operating characteristics.
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using paralell computing</span></span></span>
+<span class="r-in"><span><span class="va">fitp</span> <span class="op">&lt;-</span> <span class="fu">tsrocsa.lrt</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  time.points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">36</span>, <span class="fl">60</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  study.os <span class="op">=</span> <span class="va">study</span>,</span></span>
+<span class="r-in"><span>  time.os <span class="op">=</span> <span class="va">t</span>, n1.os <span class="op">=</span> <span class="va">n1</span>, n0.os <span class="op">=</span> <span class="va">n0</span>,</span></span>
+<span class="r-in"><span>  s1.os <span class="op">=</span> <span class="va">s1</span>, s0.os <span class="op">=</span> <span class="va">s0</span>,</span></span>
+<span class="r-in"><span>  data.os <span class="op">=</span> <span class="va">Ki67_OS</span>,</span></span>
+<span class="r-in"><span>  study.lnhr <span class="op">=</span> <span class="va">study</span>, lnhr <span class="op">=</span> <span class="va">lnHR</span>, var.lnHR <span class="op">=</span> <span class="va">lnHR.var</span>,</span></span>
+<span class="r-in"><span>  data.lnhr <span class="op">=</span> <span class="va">Ki67_HR</span>,</span></span>
+<span class="r-in"><span>  time.med <span class="op">=</span> <span class="va">mct_mo</span>, n1.med <span class="op">=</span> <span class="va">n1</span>, n0.med <span class="op">=</span> <span class="va">n0</span>,</span></span>
+<span class="r-in"><span>  s1.med <span class="op">=</span> <span class="va">s1_mct</span>, s0.med <span class="op">=</span> <span class="va">s0_mct</span>,</span></span>
+<span class="r-in"><span>  data.mt <span class="op">=</span> <span class="va">Ki67_MT</span>,</span></span>
+<span class="r-in"><span>  senp.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  parallel.ncores <span class="op">=</span> <span class="fl">2L</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fitp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model optimization</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of studies : 23 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time              : 36 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Optimizer         : 1 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * 1 indicates converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SAUC Estimates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Marginal p    SAUC      SE   CI.low   CI.up</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 1        0.651   0.020    0.610   0.690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 0.8      0.646   0.021    0.605   0.686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates (SE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 1        0.673 (0.185)   0.284 (0.115)   0.656 (0.209)   0.512 (0.095)   -0.877 (0.161)               -           -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 0.8      0.680 (0.192)   0.258 (0.117)   0.680 (0.214)   0.509 (0.096)   -0.882 (0.155)   0.399 (0.369)   0.308 (-)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model optimization</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of studies : 21 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time              : 60 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Optimizer         : 1 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * 1 indicates converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SAUC Estimates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Marginal p    SAUC      SE   CI.low   CI.up</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 1        0.647   0.018    0.610   0.682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 0.8      0.643   0.019    0.604   0.680</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameter Estimates (SE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 1        0.532 (0.133)   0.353 (0.135)   0.430 (0.153)   0.577 (0.110)   -0.928 (0.124)               -           -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> p = 0.8      0.524 (0.138)   0.330 (0.138)   0.457 (0.154)   0.572 (0.110)   -0.909 (0.126)   0.254 (0.544)   0.434 (-)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

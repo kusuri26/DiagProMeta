@@ -86,8 +86,8 @@ srocsa.t(
 - parallel.ncores:
 
   The number of cores used for the parallel computation over `sa.p`
-  (PSOCK cluster of the package parallel). The default is `1L` (no
-  parallel computation).
+  (PSOCK cluster of the package parallel); at most `length(sa.p)` cores
+  are used. The default is `1L` (no parallel computation).
 
 - parset:
 
@@ -244,7 +244,8 @@ fit1
 #> 
 
 ## fix c1^2 = 0.5
-fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
+fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD,
+sa.p = c(1, 0.8, 0.6), c11 = 0.5, parallel.ncores = 2L)
 print(fit2)
 #> ==================================================
 #> Model optimization
@@ -276,7 +277,7 @@ print(fit2)
 summary(fit2)
 #> Input:
 #> srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 
-#>     0.8, 0.6), c11 = 0.5)
+#>     0.8, 0.6), c11 = 0.5, parallel.ncores = 2L)
 #> 
 #> ==================================================
 #> Model optimization

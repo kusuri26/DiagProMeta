@@ -130,7 +130,7 @@ The default is 0.95.</p></dd>
 
 <dt id="arg-parallel-ncores">parallel.ncores<a class="anchor" aria-label="anchor" href="#arg-parallel-ncores"></a></dt>
 <dd><p>The number of cores used for the parallel computation over <code>sa.p</code>
-(PSOCK cluster of the package <span class="pkg">parallel</span>).
+(PSOCK cluster of the package <span class="pkg">parallel</span>); at most <code>length(sa.p)</code> cores are used.
 The default is <code>1L</code> (no parallel computation).</p></dd>
 
 
@@ -266,7 +266,8 @@ A likelihood-based sensitivity analysis for publication bias on the summary rece
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## fix c1^2 = 0.5</span></span></span>
-<span class="r-in"><span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu">srocsa.t</span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, TN <span class="op">=</span> <span class="va">TN</span>, FP <span class="op">=</span> <span class="va">FP</span>, data <span class="op">=</span> <span class="va">IVD</span>, sa.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span><span class="op">)</span>, c11 <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu">srocsa.t</span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, TN <span class="op">=</span> <span class="va">TN</span>, FP <span class="op">=</span> <span class="va">FP</span>, data <span class="op">=</span> <span class="va">IVD</span>,</span></span>
+<span class="r-in"><span>sa.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span><span class="op">)</span>, c11 <span class="op">=</span> <span class="fl">0.5</span>, parallel.ncores <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model optimization</span>
@@ -298,7 +299,7 @@ A likelihood-based sensitivity analysis for publication bias on the summary rece
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Input:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     0.8, 0.6), c11 = 0.5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     0.8, 0.6), c11 = 0.5, parallel.ncores = 2L)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model optimization</span>

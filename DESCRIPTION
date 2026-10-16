@@ -39,8 +39,13 @@ Config/roxygen2/version: 8.1.1
 Depends:
     R (>= 3.5)
 Imports:
+    graphics,
+    grDevices,
     lifecycle,
     mixmeta,
-    numDeriv
+    numDeriv,
+    parallel,
+    stats,
+    utils
 URL: https://kusuri26.github.io/DiagProgMeta/, https://github.com/kusuri26/DiagProgMeta/
 BugReports: https://github.com/kusuri26/DiagProgMeta/issues

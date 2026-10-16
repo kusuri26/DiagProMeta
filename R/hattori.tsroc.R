@@ -101,6 +101,22 @@
 #' if (interactive()) plot(fit, add.study = TRUE, study.size = "precision")
 #' }
 #'
+#' ## Using paralell computing
+#'
+#' fitp <- hattori.tsroc(
+#'   time.points = c(24, 36, 60),
+#'   study.os = study,
+#'   time.os = t, n1.os = n1, n0.os = n0,
+#'   s1.os = s1, s0.os = s0,
+#'   data.os = Ki67_OS,
+#'   study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+#'   data.lnhr = Ki67_HR,
+#'   time.med = mct_mo, n1.med = n1, n0.med = n0,
+#'   s1.med = s1_mct, s0.med = s0_mct,
+#'   data.mt = Ki67_MT,
+#'   parallel.ncores = 2L)
+#' print(fitp)
+#'
 #' @seealso
 #' \code{\link{print.sroc}},
 #' \code{\link{summary.sroc}},
@@ -213,32 +229,8 @@ hattori.tsroc <- function(
 
   }
 
-  if(parallel.ncores == 1L) {
-
-     res <- lapply(time.points, function(tt) f(tt))
-
-  } else {
-
-    cl <- parallel::makeCluster(parallel.ncores, type = "PSOCK")
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-
-    ## envir = environment(): the package functions are found through the namespace
-    ## (not in .GlobalEnv when the package is installed)
-    parallel::clusterExport(
-      cl,
-      varlist = c("f", "convert.dt.tsroc", "cens.eta", "meta.sroc.mle", "sroc.init",
-                  "resolve_inputs", "default.parset.sroc"),
-      envir = environment()
-    )
-
-    res <- parallel::parLapply(
-      cl,
-      X = time.points,
-      fun = f
-    )
-
-
-  }
+  ## fit at each time point (in parallel when parallel.ncores > 1)
+  res <- .lapply_parallel(time.points, f, ncores = parallel.ncores)
 
   class(res) <- "sroc"
   names(res) <- paste0("t = ", time.points)

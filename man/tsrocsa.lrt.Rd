@@ -193,6 +193,23 @@ if (interactive()) plot(fit, add.study = TRUE, study.size = "precision")
 }
 
 
+## Using paralell computing
+fitp <- tsrocsa.lrt(
+  time.points = c(36, 60),
+  study.os = study,
+  time.os = t, n1.os = n1, n0.os = n0,
+  s1.os = s1, s0.os = s0,
+  data.os = Ki67_OS,
+  study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+  data.lnhr = Ki67_HR,
+  time.med = mct_mo, n1.med = n1, n0.med = n0,
+  s1.med = s1_mct, s0.med = s0_mct,
+  data.mt = Ki67_MT,
+  senp.p = c(1, 0.8),
+  parallel.ncores = 2L
+)
+print(fitp)
+
 }
 \references{
 Combescure C, Daures JP, Foucher Y (2016).
