@@ -43,11 +43,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
+\strong{Maintainer}: Yi Zhou \email{zhouy@people.kobe-u.ac.jp} (\href{https://orcid.org/0000-0001-9254-3245}{ORCID})
 
 Authors:
 \itemize{
-  \item Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
+  \item Yi Zhou \email{zhouy@people.kobe-u.ac.jp} (\href{https://orcid.org/0000-0001-9254-3245}{ORCID})
   \item Ryota Kinugawa [contributor]
   \item Kota Nakaike [contributor]
   \item Yamato Hashimoto [contributor]

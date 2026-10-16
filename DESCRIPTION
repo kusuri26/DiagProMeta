@@ -16,9 +16,12 @@ Authors@R: c(
       role = c("aut", "ctb")
     ),
     person(
-      "Zhou", "Yi",
+      "Yi", "Zhou",
       email = "zhouy@people.kobe-u.ac.jp",
-      role = c("aut", "cre")
+      role = c("aut", "cre"),
+      comment = c(
+      ORCID = "0000-0001-9254-3245"
+      )
     )
   )
 Description: Provides methods for meta-analysis of diagnostic test accuracy

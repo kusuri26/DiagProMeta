@@ -55,11 +55,13 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Zhou Yi <zhouy@people.kobe-u.ac.jp>
+**Maintainer**: Yi Zhou <zhouy@people.kobe-u.ac.jp>
+([ORCID](https://orcid.org/0000-0001-9254-3245))
 
 Authors:
 
-- Zhou Yi <zhouy@people.kobe-u.ac.jp>
+- Yi Zhou <zhouy@people.kobe-u.ac.jp>
+  ([ORCID](https://orcid.org/0000-0001-9254-3245))
 
 - Ryota Kinugawa \[contributor\]
 
