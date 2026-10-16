@@ -66,6 +66,9 @@
 #' \emph{Research Synthesis Methods}, 16(3), 528--549.
 #' \doi{10.1017/rsm.2025.14}
 #'
+#'
+#' @docType package
+#' @name DiagProgMeta-package
 #' @importFrom stats integrate nlminb plogis pnorm qlogis qnorm uniroot
 #' @importFrom stats complete.cases na.omit setNames
 #' @importFrom utils head tail modifyList
