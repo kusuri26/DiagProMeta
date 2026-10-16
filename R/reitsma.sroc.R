@@ -1,4 +1,4 @@
-#' @title Bivariate random-effects model for the SROC curve without publication bias
+#' @title Bivariate random-effects model (Reitsma's model) estimating the SROC curve without publication bias
 #'
 #' @description This function fits the bivariate random-effects model of the logit-transformed
 #' sensitivity and specificity (Reitsma et al., 2005) by the maximum likelihood method,
@@ -43,6 +43,9 @@
 #' and of the sensitivity and specificity.}
 #' \item{\code{par.all}}{All the estimates:
 #' \code{mu1}, \code{mu2}, \code{tau1^2}, \code{tau2^2}, \code{tau12}, \code{sauc}, \code{sens}, \code{spec}.}
+#' \item{\code{data}}{A data frame of the study-level logit-transformed sensitivity (\code{y1}) and
+#' specificity (\code{y2}) and their within-study variances (\code{v1}, \code{v2}),
+#' used by \code{\link{plot.sroc}} to add the studies (\code{add.study = TRUE}).}
 #' }
 #'
 #' @references
@@ -55,16 +58,25 @@
 #' ## load data
 #' data(IVD)
 #'
-#' fit <- sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+#' fit <- reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
 #' fit$par.all
 #' fit$sauc.ci
+#'
+#' ## SROC curve with the summary point
+#' plot(fit)
+#'
+#' ## add the pointwise confidence band and the confidence region of the summary point
+#' plot(fit, plot.ci = TRUE, spoint.region = TRUE)
+#'
+#' plot(fit, add.study = TRUE)                              # studies as open circles
+#' plot(fit, add.study = TRUE, study.size = "precision")    # size is proportional to 1/sqrt(v1 + v2)
 #'
 #' @seealso
 #' \code{\link{srocsa.t}},
 #' \code{\link{sauc}}
 #'
 #' @export
-sroc <- function(
+reitsma.sroc <- function(
   TP, FN, FP, TN,
   data = NULL,
   cc.value = 0.5,
@@ -98,5 +110,21 @@ sroc <- function(
 
   data.conv <- convert.dt.sroc(TP, FN, FP, TN, data = NULL, cc.value = cc.value, cc.type = cc.type)
 
-  meta.sroc.mle(data.conv$y1, data.conv$y2, data.conv$v1, data.conv$v2, ci.level = ci.level, parset = parset)
+  res <- meta.sroc.mle(data.conv$y1, data.conv$y2, data.conv$v1, data.conv$v2, ci.level = ci.level, parset = parset)
+
+  ## keep the study-level data (logit sensitivity / specificity) for plotting
+  if (!inherits(res, "try-error")) {
+    res$data <- data.frame(y1 = data.conv$y1, y2 = data.conv$y2,
+                           v1 = data.conv$v1, v2 = data.conv$v2)
+  }
+
+  class(res) <- "sroc"
+  # names(res) <- time.points
+
+  ## information for print/summary/plot methods
+  attr(res, "type")    <- "sroc"
+  # attr(res, "n.study") <- vapply(time.points, function(tt) sum(data.os$time.os == tt, na.rm = TRUE), numeric(1))
+
+  return(res)
+
 }

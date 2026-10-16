@@ -4,7 +4,7 @@
 \name{DiagProMeta-package}
 \alias{DiagProMeta}
 \alias{DiagProMeta-package}
-\title{Sensitivity Analysis for Publication Bias on the SROC Curve}
+\title{Meta-analysis of diagnostic or prognostic studies with sensitivity analyses on the SROC Curve anf the tim-dependent SROC curve}
 \description{
 This package implements the likelihood-based sensitivity analysis for publication bias
 on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC)
@@ -12,14 +12,13 @@ in meta-analysis of diagnostic test accuracy, see Zhou et al. (2023) \doi{10.100
 It also provides the sensitivity analysis on the time-dependent SROC curve in meta-analysis of prognostic studies,
 where the time-dependent sensitivity and specificity are reconstructed from the published survival probabilities,
 see Combescure et al. (2016) \doi{10.1177/0962280212464542}.
-}
-\details{
+
 Main functions:
 \itemize{
   \item \code{\link{srocsa.t}} Sensitivity analysis for publication bias on the SROC curve and SAUC.
   \item \code{\link{tsrocsa.lrt}} Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC.
-  \item \code{\link{sroc}} Bivariate random-effects model for the SROC curve without publication bias.
-  \item \code{\link{tsroc}} Time-dependent SROC curve without publication bias.
+  \item \code{\link{reitsma.sroc}} Bivariate random-effects model for the SROC curve without publication bias.
+  \item \code{\link{hattori.tsroc}} Time-dependent SROC curve without publication bias.
   \item \code{\link{sauc}} SAUC and its confidence interval.
 }
 
@@ -36,11 +35,11 @@ Example data:
 }
 }
 \author{
-\strong{Maintainer}: Zhou Yi \email{jane@example.com}
+\strong{Maintainer}: Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
 
 Authors:
 \itemize{
-  \item Zhou Yi \email{jane@example.com}
+  \item Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
 }
 
 Other contributors:

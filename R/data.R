@@ -79,26 +79,23 @@
 #'
 #' @format A list of 3 datasets:
 #' \describe{
-#'   \item{os}{Dataset containing overall survival data. It includes
+#'   \item{OS}{Dataset containing overall survival data. It includes
+#'   \code{author} (study author), \code{study} (study identifier),
+#'   \code{t} (follow-up time in month),
+#'   \code{n1} and \code{n0} (sample sizes in the two comparison groups), and
+#'   \code{s1} and \code{s0} (survival probabilities in the two groups).}
+#'
+#'   \item{HR}{Dataset containing hazard-ratio data. It includes
+#'   \code{author} (study author), \code{study} (study identifier),
+#'   \code{HR} (hazard ratio), and \code{ci.low} and \code{ci.up}
+#'   (lower and upper confidence limits of the hazard ratio).}
+#'
+#'   \item{mct}{Dataset containing median follow-up time data. It includes
 #'   \code{author} (study author), \code{study} (study identifier),
 #'   \code{n1} and \code{n0} (sample sizes in the two comparison groups),
-#'   \code{s1} and \code{s0} (survival probabilities in the two groups),
-#'   \code{ty} (time point at which survival is assessed), and
-#'   \code{bevilacqua} (study-specific indicator).}
-#'
-#'   \item{lnhr}{Dataset containing hazard-ratio data. It includes
-#'   \code{author} (study author), \code{study} (study identifier),
-#'   \code{HR} (hazard ratio), \code{ci.low} and \code{ci.up}
-#'   (lower and upper confidence limits of the hazard ratio),
-#'   \code{lnHR} (natural logarithm of the hazard ratio), and
-#'   \code{lnHR.var} (variance of the log hazard ratio).}
-#'
-#'   \item{mct}{Dataset containing median survival-time data. It includes
-#'   \code{author} (study author), \code{study} (study identifier),
-#'   \code{n1} and \code{n0} (sample sizes in the two comparison groups),
-#'   \code{mct_mo} (median survival time in months),
-#'   \code{s1_mct} and \code{s0_mct} (survival probabilities in the two
-#'   comparison groups), and \code{mty} (median survival time in years).}
+#'   \code{mct_mo} (median follow-up time in months),
+#'   \code{s1_mct} and \code{s0_mct} (survival probabilities
+#'   at median follow-up time in the two comparison groups).}
 #' }
 #'
 #' @source
@@ -113,12 +110,12 @@
 #' data(Ki67)
 #'
 #' # Overall survival data
-#' head(Ki67$os)
+#' head(Ki67$OD)
 #'
-#' # Log hazard-ratio data
-#' head(Ki67$lnhr)
+#' # Hazard-ratio data
+#' head(Ki67$HR)
 #'
-#' # Median survival-time data
-#' head(Ki67$mct)
+#' # Median follow-up time data
+#' head(Ki67$MT)
 "Ki67"
 

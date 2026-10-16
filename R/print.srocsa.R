@@ -38,7 +38,7 @@
 #'
 #' @seealso
 #' \code{\link{srocsa.t}},
-#' \code{\link{tsroc}},
+#' \code{\link{hattori.tsroc}},
 #' \code{\link{tsrocsa.lrt}},
 #' \code{\link{summary.srocsa}},
 #' \code{\link{plot.srocsa}}

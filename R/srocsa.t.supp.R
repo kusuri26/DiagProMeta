@@ -2,11 +2,11 @@
 ##
 ## Support function
 ##
-###########################  
+###########################
 
 
 sroc.pb.t.fix <- function(
-  y1, y2, v1, v2, 
+  y1, y2, v1, v2,
   p,
   c11 = 0.5,
   ci.level = 0.95,
@@ -31,7 +31,7 @@ sroc.pb.t.fix <- function(
 
   fn <- function(par) llk.o.srocpb.t(
     par = c(par[1:6], c11),
-    n=n, y1=y1, y2=y2, v1=v1, v2=v2, 
+    n=n, y1=y1, y2=y2, v1=v1, v2=v2,
     p = p,
     alpha.bound = parset$alpha.bound
     )
@@ -135,7 +135,7 @@ sroc.pb.t.fix <- function(
     # opt$l.data <- data
     # opt$call <- this.call
 
-    
+
 } else opt <- NULL
 
   return(opt)
@@ -144,7 +144,7 @@ sroc.pb.t.fix <- function(
 
 
 
-### function of fixing 
+### function of fixing
 sroc.pb.t.unfix <- function(
   y1, y2, v1, v2,
   p,
@@ -152,7 +152,7 @@ sroc.pb.t.unfix <- function(
   parset = list()
 ){
 
-  
+
 
   n  <- length(y1)
 
@@ -260,10 +260,10 @@ sroc.pb.t.unfix <- function(
     ## PAR AND ALL PAR -----
     opt$par.all <- c(u1, u2, t11, t22, t12, c11, c22, beta, a.opt, sauc, se, sp)
     names(opt$par.all) <- c("mu1", "mu2", "tau1^2", "tau2^2", "tau12", "c1^2", "c2^2", "beta", "alpha", "sauc", "sens", "spec")
-  
+
   } else opt <- NULL
 
-  
+
   return(opt)
 
 }
@@ -327,7 +327,7 @@ llk.o.srocpb.t <- function(
 
   a.p <- function(a) {mean(1/f.b(a), na.rm = TRUE) - 1/p}
 
-  a.opt.try <- suppressWarnings(try(uniroot(a.p, interval=c(-alpha.bound, alpha.bound), extendInt="yes"), silent = TRUE)) 
+  a.opt.try <- suppressWarnings(try(uniroot(a.p, interval=c(-alpha.bound, alpha.bound), extendInt="yes"), silent = TRUE))
 
   a.opt <- a.opt.try$root
 

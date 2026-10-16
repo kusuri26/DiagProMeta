@@ -19,7 +19,7 @@ sauc(mu1, mu2, tau1, tau2, rho, var.matrix = NULL, ci.level)
 
 \item{var.matrix}{The 5 x 5 variance-covariance matrix of the estimates of
 \code{(mu1, mu2, tau1, tau2, rho)} in this order,
-such as \code{var.ml} in the output of \code{\link{sroc}}.
+such as \code{var.ml} in the output of \code{\link{reitsma.sroc}}.
 If \code{var.matrix = NULL} (default), the confidence interval is not calculated.}
 
 \item{ci.level}{The confidence level of the confidence interval, within (0, 1).
@@ -52,13 +52,13 @@ sauc(mu1 = 1.5, mu2 = 2, tau1 = 0.8, tau2 = 0.9, rho = -0.3)
 
 ## SAUC with confidence interval from the fitted model
 data(IVD)
-fit <- sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+fit <- reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
 est <- fit$par
 sauc(mu1 = est[1], mu2 = est[2], tau1 = est[3], tau2 = est[4], rho = est[5],
      var.matrix = fit$var.ml, ci.level = 0.95)
 
 }
 \seealso{
-\code{\link{sroc}},
+\code{\link{reitsma.sroc}},
 \code{\link{srocsa.t}}
 }

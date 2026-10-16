@@ -1,4 +1,5 @@
 #' @title Print the summary of 'srocsa'
+#'
 #' @description Print the summary of 'srocsa':
 #' the main results (see \code{\link{print.srocsa}}) and the estimates of all the parameters
 #' (\code{par.all}) of the fitted models.

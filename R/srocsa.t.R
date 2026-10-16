@@ -94,12 +94,14 @@
 #' \code{mu1}, \code{mu2}, \code{tau1^2}, \code{tau2^2}, \code{tau12}, \code{c1^2}, \code{c2^2},
 #' \code{beta}, \code{alpha}, \code{sauc}, \code{sens}, \code{spec}.}
 #' }
+#' The attribute \code{"data"} is a data frame of the study-level logit-transformed sensitivity (\code{y1})
+#' and specificity (\code{y2}) and their variances (\code{v1}, \code{v2}),
+#' used by \code{\link{plot.srocsa}} (\code{add.study = TRUE}).
 #' The results can be shown by \code{\link{print.srocsa}}, \code{\link{summary.srocsa}}, and \code{\link{plot.srocsa}}.
 #'
 #' @references
 #' Zhou Y, Huang A, Hattori S (2023).
-#' A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic
-#' in meta-analysis of diagnostic test accuracy.
+#' A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic in meta-analysis of diagnostic test accuracy.
 #' \emph{Statistics in Medicine}, 42(6), 781--798.
 #' \doi{10.1002/sim.9643}
 #'
@@ -112,7 +114,7 @@
 #' fit1
 #'
 #' ## fix c1^2 = 0.5
-#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6), c11 = 0.5)
+#' fit2 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6, 0.4), c11 = 0.5)
 #' summary(fit2)
 #' plot(fit2)
 #'
@@ -124,7 +126,7 @@
 #' \code{\link{print.srocsa}},
 #' \code{\link{summary.srocsa}},
 #' \code{\link{plot.srocsa}},
-#' \code{\link{sroc}},
+#' \code{\link{reitsma.sroc}},
 #' \code{\link{sauc}}
 #'
 #' @export
@@ -194,7 +196,7 @@ srocsa.t <- function(
       FN = inputs$FN
       FP = inputs$FP
       TN = inputs$TN
-    
+
 
       ## update parameter setting
   parset <- modifyList(default.parset.sroc(), parset)
@@ -221,7 +223,7 @@ f <- function(pp){
 
       sroc.pb.t.fix(y1=y1, y2=y2, v1=v1, v2=v2, p=pp, c11 = c11, ci.level = ci.level, parset = parset)
     }
-  
+
   }
 
   if(parallel.ncores == 1L) {
@@ -259,13 +261,14 @@ f <- function(pp){
   ## LOGIT-DATA  -----
     # opt$l.data <- data
   res$call <- this.call
-  
+
   class(res) <- "srocsa"
 
   ## information for print/summary/plot methods
   attr(res, "type")    <- "srocsa.t"
   attr(res, "sa.p")    <- sa.p
   attr(res, "n.study") <- n
+  attr(res, "data")    <- data.frame(y1 = y1, y2 = y2, v1 = v1, v2 = v2)
 
   return(res)
 

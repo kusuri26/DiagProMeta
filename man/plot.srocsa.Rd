@@ -7,31 +7,52 @@
 \method{plot}{srocsa}(
   x,
   time = NULL,
+  p = NULL,
+  ask = NULL,
   sroc.cols = NULL,
   sroc.lty = 1,
-  sroc.lwd = 1,
+  sroc.lwd = 2,
   add.spoint = TRUE,
   sp.pch = 19,
-  sp.cex = 1,
+  sp.cex = 1.2,
+  plot.ci = FALSE,
+  spoint.region = FALSE,
+  ci.level = 0.95,
+  ci.lty = 2,
+  ci.lwd = 1,
+  add.study = FALSE,
+  study.size = c("fixed", "precision"),
+  study.pch = 1,
+  study.cex = 1,
+  study.col = "grey55",
+  add.sauc = TRUE,
   legend.pos = "bottomright",
+  legend.cex = 0.85,
   main = NULL,
-  xlab = "FPR",
-  ylab = "TPR",
+  xlab = "FPR (1 - specificity)",
+  ylab = "TPR (sensitivity)",
+  n.grid = 300,
   ...
 )
 }
 \arguments{
-\item{x}{A fitted object returned by the function \code{srocsa.t}, \code{tsroc}, or \code{tsrocsa.lrt}.}
+\item{x}{A fitted object returned by the function \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.}
 
-\item{time}{Time points to plot (only for the results from \code{tsroc} or \code{tsrocsa.lrt}).
-If \code{time=NULL} (default), all the time points are plotted.}
+\item{time}{Time points to plot (only for the results from \code{\link{tsrocsa.lrt}}).
+If \code{time = NULL} (default), all the time points are plotted.}
+
+\item{p}{Values of the marginal selection probability \eqn{p} to plot.
+If \code{p = NULL} (default), all the values are plotted.}
+
+\item{ask}{Logical; whether to wait for <Return> before each new time point.
+Default \code{NULL} means \code{TRUE} when more than one plot is drawn on an interactive device.}
 
 \item{sroc.cols}{Colors of the SROC curves, one for each \eqn{p}.
-Default uses grey's colors.}
+Default uses grey colors (black for the first \eqn{p}).}
 
-\item{sroc.lty}{Line type of SROC curves.}
+\item{sroc.lty}{Line types of the SROC curves, recycled over \eqn{p}.}
 
-\item{sroc.lwd}{Line width of SROC curves.}
+\item{sroc.lwd}{Line width of the SROC curves.}
 
 \item{add.spoint}{Whether to add the summary points on the SROC curves.}
 
@@ -39,24 +60,59 @@ Default uses grey's colors.}
 
 \item{sp.cex}{Size of the summary points.}
 
-\item{legend.pos}{Position of the legend. See \code{\link[graphics]{legend}}.}
+\item{plot.ci}{Whether to add the pointwise confidence bands of the SROC curves
+(delta method using \code{var.ml}).}
+
+\item{spoint.region}{Whether to add the confidence regions of the summary points.}
+
+\item{ci.level}{Confidence level of the bands and regions. Default 0.95.}
+
+\item{ci.lty, ci.lwd}{Line type and width of the bands and regions.}
+
+\item{add.study}{Whether to add the observed (published) studies
+(\eqn{(1 - \mathrm{spec}_i, \mathrm{sens}_i)}{(1 - spec_i, sens_i)}, after continuity correction),
+stored in the attribute \code{"data"} of \code{x}.}
+
+\item{study.size}{Size of the study points: \code{"fixed"} (default) or \code{"precision"},
+proportional to \eqn{1/\sqrt{v_1 + v_2}}{1/sqrt(v1 + v2)} relative to its mean.}
+
+\item{study.pch, study.cex, study.col}{Symbol, (base) size, and color of the study points.}
+
+\item{add.sauc}{Whether to show the SAUC (and its CI) for each \eqn{p} in the legend.}
+
+\item{legend.pos}{Position of the legend. See \code{\link[graphics]{legend}}.
+\code{NULL} suppresses the legend.}
+
+\item{legend.cex}{Size of the legend text.}
 
 \item{main}{Title of the plot.
-If \code{main=NULL} (default), \code{time = xx} is used for the time-dependent results,
+If \code{main = NULL} (default), \code{time = xx} is used for the time-dependent results,
 and no title for the results from \code{srocsa.t}.}
 
 \item{xlab}{Label of x-axis.}
 
 \item{ylab}{Label of y-axis.}
 
-\item{...}{Other arguments in function \code{\link{plot.default}} or function \code{\link{curve}}}
+\item{n.grid}{Number of grid points to draw each curve.}
+
+\item{...}{Other arguments in function \code{\link[graphics]{plot.default}}.}
 }
 \value{
-Plot the SROC curves from a srocsa object
+\code{x}, invisibly. Called for the side effect of plotting.
 }
 \description{
-This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p}.
-For the time-dependent results, one plot is created at each time point, with the title \code{time = xx}.
+This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p},
+from the sensitivity analysis by \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
+For \code{\link{srocsa.t}}, one plot is created.
+For \code{\link{tsrocsa.lrt}}, one plot is created at each time point, with the title \code{time = xx};
+in an interactive session the user is prompted ("Hit <Return> to see next plot")
+before each new time point.
+The same \eqn{p} has the same color and line type at all the time points.
+}
+\details{
+For \eqn{p < 1} in \code{\link{tsrocsa.lrt}}, the SROC curve is calculated from
+\eqn{(\mu_1, \mu_2, \tau_1, \tau_2, \rho_1)}{(mu1, mu2, tau1, tau2, rho1)} of the trivariate model,
+i.e., the parameters of the logit-transformed sensitivity and specificity.
 }
 \examples{
 ## load data
@@ -65,12 +121,21 @@ data(IVD)
 fit1 <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6))
 plot(fit1)
 
-## set the colors
-plot(fit1, sroc.cols = c("black", "blue", "red"), legend.pos = "bottomright")
+## set the colors and add the studies
+plot(fit1, sroc.cols = c("black", "blue", "red"), add.study = TRUE)
+
+## only p = 1 and p = 0.6, with confidence bands
+plot(fit1, p = c(1, 0.6), plot.ci = TRUE, sroc.cols = c("black", "red"))
+
+\donttest{
+## time-dependent results (see ?tsrocsa.lrt for fit2)
+## plot(fit2)               # one plot per time point; press <Return> for the next
+## plot(fit2, time = 60)    # one time point
+}
 
 }
 \seealso{
 \code{\link{srocsa.t}},
-\code{\link{tsroc}},
-\code{\link{tsrocsa.lrt}}
+\code{\link{tsrocsa.lrt}},
+\code{\link{plot.sroc}}
 }

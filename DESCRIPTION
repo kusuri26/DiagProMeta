@@ -1,11 +1,11 @@
 Package: DiagProMeta
 Type: Package
-Title: Sensitivity Analysis for Publication Bias on the SROC Curve
+Title: Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias
 Version: 0.1.0
 Authors@R: c(
     person(
       "Zhou", "Yi",
-      email = "jane@example.com",
+      email = "zhouy@people.kobe-u.ac.jp",
       role = c("aut", "cre")
     ),
     person(
@@ -21,10 +21,12 @@ Authors@R: c(
       role = c("ctb")
     )
   )
-Description: Likelihood-based sensitivity analysis for publication bias on the
-    summary receiver operating characteristic (SROC) curve in meta-analysis of
-    diagnostic test accuracy, and on the time-dependent SROC curve in
-    meta-analysis of prognostic studies.
+Description: Provides methods for meta-analysis of diagnostic test accuracy
+    and prognostic studies. The package estimates the summary receiver
+    operating characteristic (SROC) curve for diagnostic test accuracy and
+    the time-dependent SROC curve for prognostic studies. It also provides
+    likelihood-based sensitivity analyses to assess the potential impact of
+    publication bias on these curves.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

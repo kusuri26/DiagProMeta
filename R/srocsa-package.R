@@ -1,5 +1,7 @@
-#' Sensitivity Analysis for Publication Bias on the SROC Curve
+#' @title
+#' Meta-analysis of diagnostic or prognostic studies with sensitivity analyses on the SROC Curve anf the tim-dependent SROC curve
 #'
+#' @description
 #' This package implements the likelihood-based sensitivity analysis for publication bias
 #' on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC)
 #' in meta-analysis of diagnostic test accuracy, see Zhou et al. (2023) \doi{10.1002/sim.9643}.
@@ -11,8 +13,8 @@
 #' \itemize{
 #'   \item \code{\link{srocsa.t}} Sensitivity analysis for publication bias on the SROC curve and SAUC.
 #'   \item \code{\link{tsrocsa.lrt}} Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC.
-#'   \item \code{\link{sroc}} Bivariate random-effects model for the SROC curve without publication bias.
-#'   \item \code{\link{tsroc}} Time-dependent SROC curve without publication bias.
+#'   \item \code{\link{reitsma.sroc}} Bivariate random-effects model for the SROC curve without publication bias.
+#'   \item \code{\link{hattori.tsroc}} Time-dependent SROC curve without publication bias.
 #'   \item \code{\link{sauc}} SAUC and its confidence interval.
 #' }
 #'

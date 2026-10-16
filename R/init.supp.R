@@ -1,3 +1,9 @@
+###########################
+##
+## Support function
+##
+###########################  
+
 #### input validations
 
 resolve_inputs <- function(

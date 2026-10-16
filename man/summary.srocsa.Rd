@@ -40,7 +40,7 @@ res$coef
 }
 \seealso{
 \code{\link{srocsa.t}},
-\code{\link{tsroc}},
+\code{\link{hattori.tsroc}},
 \code{\link{tsrocsa.lrt}},
 \code{\link{print.srocsa}},
 \code{\link{print.summary.srocsa}}

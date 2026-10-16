@@ -34,7 +34,7 @@
 #' @param n0.med Specify the column of the number of subjects in group 0.
 #' @param s1.med Specify the column of the survival probability at \code{time.med} in group 1.
 #' @param s0.med Specify the column of the survival probability at \code{time.med} in group 0.
-#' @param data.mct A data frame of the median follow-up time, with one row for each study reporting it.
+#' @param data.mt A data frame of the median follow-up time, with one row for each study reporting it.
 #' It is used to estimate the censoring distribution common to all the studies (see details).
 #'
 #' @param senp.p A numeric vector of the marginal selection probabilities \eqn{p = P(\mathrm{select})}{p = P(select)},
@@ -74,7 +74,7 @@
 #' Survival probabilities of 1 and 0 are replaced by \eqn{(n + 0.5) / (n + 1)} and \eqn{0.5 / (n + 1)}.}
 #' \item{Within-study variances and covariances}{They are calculated from the survival probabilities up to \eqn{t},
 #' assuming the censoring distribution \eqn{G(t) = \exp(-\eta t)}{G(t) = exp(-eta * t)} common to all the studies.
-#' \eqn{\eta}{eta} is estimated within [0, 1] by least squares from \code{data.mct}, such that
+#' \eqn{\eta}{eta} is estimated within [0, 1] by least squares from \code{data.mt}, such that
 #' the pooled survival probability at the median follow-up time multiplied by \eqn{G} is close to 0.5.}
 #' \item{Selection function}{The probability of publishing study \eqn{i} is modeled as
 #' \eqn{\Phi(\alpha + \beta t_i)}{Phi(alpha + beta * t_i)}, where \eqn{t_i}{t_i} is lnHR divided by its standard error.
@@ -87,7 +87,7 @@
 #' @return An object of class \code{"srocsa"}:
 #' a list with one element for each time point (named by \code{time.points}),
 #' each of which is a list with one element for each value of \code{senp.p} (named by \code{senp.p}).
-#' For \eqn{p = 1}, each element is the same as the output of \code{\link{sroc}}.
+#' For \eqn{p = 1}, each element is the same as the output of \code{\link{reitsma.sroc}}.
 #' For \eqn{p < 1}, each element is the output of \code{\link[stats]{nlminb}}
 #' (\code{par} is \code{(mu1, mu2, mu3, tau1, tau2, tau3, rho1, rho2, rho3, beta)};
 #' \code{rho1}, \code{rho2}, and \code{rho3} are the correlations of (1, 2), (2, 3), and (1, 3))
@@ -95,6 +95,9 @@
 #' \code{sauc}, \code{beta}, \code{alpha}, \code{mu1.ci}, \code{mu2.ci}, \code{mu3.ci},
 #' \code{par.all}, \code{sauc.ci}, and \code{var.ml}
 #' (index 1: logit-sensitivity, 2: logit-specificity, 3: lnHR).
+#' The list at each time point has the attribute \code{"data"}: a data frame of the study-level
+#' logit-transformed sensitivity (\code{y1}) and specificity (\code{y2}) and their variances
+#' (\code{v1}, \code{v2}), used by \code{\link{plot.srocsa}} (\code{add.study = TRUE}).
 #' The results can be shown by \code{\link{print.srocsa}}, \code{\link{summary.srocsa}}, and \code{\link{plot.srocsa}}.
 #'
 #' @references
@@ -105,33 +108,46 @@
 #' \doi{10.1177/0962280212464542}
 #'
 #' @examples
-#' ## This example requires the Ki-67 data (Ki67_OS, Ki67_HR, Ki67_MCT),
-#' ## which are not yet included in the package.
-#' \dontrun{
 #' ## load data
-#' data(Ki67_OS)
-#' data(Ki67_HR)
-#' data(Ki67_MCT)
+#' data(Ki67)
+#' head(Ki67$OS)
+#' head(Ki67$HR)
+#' head(Ki67$MT)
+#'
+#' ## Define datasets of the HR
+#' Ki67_OS <- Ki67$OS
+#' Ki67_HR <- Ki67$HR
+#' Ki67_MT <- Ki67$MT
 #'
 #' ## lnHR and its variance from HR and its 95 percent CI
 #' Ki67_HR$lnHR   <- log(Ki67_HR$HR)
-#' Ki67_HR$v.lnHR <- ((log(Ki67_HR$ci.up) - log(Ki67_HR$ci.low)) / (2 * qnorm(0.975)))^2
+#' Ki67_HR$lnHR.var <- ((log(Ki67_HR$ci.up) - log(Ki67_HR$ci.low)) / (2 * qnorm(0.975)))^2
 #'
 #' fit <- tsrocsa.lrt(
-#'   time.points = c(24, 36),
-#'   study.os = study, time.os = t, n1.os = n1, n0.os = n0, s1.os = s1, s0.os = s0,
+#'   time.points = c(36, 60),
+#'   study.os = study,
+#'   time.os = t, n1.os = n1, n0.os = n0,
+#'   s1.os = s1, s0.os = s0,
 #'   data.os = Ki67_OS,
-#'   study.lnhr = study, lnhr = lnHR, var.lnHR = v.lnHR, data.lnhr = Ki67_HR,
-#'   time.med = mct_mo, n1.med = n1, n0.med = n0, s1.med = s1_mct, s0.med = s0_mct,
-#'   data.mct = Ki67_MCT,
+#'   study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+#'   data.lnhr = Ki67_HR,
+#'   time.med = mct_mo, n1.med = n1, n0.med = n0,
+#'   s1.med = s1_mct, s0.med = s0_mct,
+#'   data.mt = Ki67_MT,
 #'   senp.p = c(1, 0.8)
 #' )
 #' fit
+#' f1 <- fit[[1]][["1"]]      # p = 1
+#' f8 <- fit[[1]][["0.8"]]    # p < 1 (use one of your senp.p values)
+#' f1$par; f1$par.all
+#' f8$par; f8$par.all
+#' dim(f8$var.ml)
+
 #' plot(fit)
-#' }
+#'
 #'
 #' @seealso
-#' \code{\link{tsroc}},
+#' \code{\link{hattori.tsroc}},
 #' \code{\link{print.srocsa}},
 #' \code{\link{summary.srocsa}},
 #' \code{\link{plot.srocsa}},
@@ -139,10 +155,10 @@
 #'
 #' @export
 tsrocsa.lrt <- function(
-  time.points, 
+  time.points,
   study.os, time.os, n1.os, n0.os, s1.os, s0.os, data.os,
   study.lnhr, lnhr, var.lnHR, data.lnhr,
-  time.med, n1.med, n0.med, s1.med, s0.med, data.mct,
+  time.med, n1.med, n0.med, s1.med, s0.med, data.mt,
   senp.p = 1,
   ci.level = 0.95,
   parallel.ncores = 1L,
@@ -203,13 +219,13 @@ tsrocsa.lrt <- function(
         s1.med   = substitute(s1.med),
         s0.med   = substitute(s0.med)
       ),
-      data = data.mct,
+      data = data.mt,
       env = parent.frame(),
       numeric = FALSE,
       same.length = TRUE
     )
 
-    data.mct <- data.frame(
+    data.mt <- data.frame(
       time.med  = inputs$time.med,
       n1.med    = inputs$n1.med,
       n0.med    = inputs$n0.med,
@@ -222,12 +238,7 @@ tsrocsa.lrt <- function(
   parset <- modifyList(default.parset.tsroc.pb(), parset)
 
 
-f <- function(tt, pp){
-
-  data.log <- convert.dt.tsroc(
-    time.point = tt, study.os=study.os, time.os, n1.os, n0.os, s1.os, s0.os, data.os,
-    study.lnhr, lnhr, var.lnHR, data.lnhr,
-    time.med, n1.med, n0.med, s1.med, s0.med, data.mct)
+f <- function(data.log, pp){
 
   tsrocsa.lrt.single(
     y1=data.log$u_sen, y2=data.log$u_spe, y3=data.log$u_lnHR,
@@ -235,16 +246,27 @@ f <- function(tt, pp){
     v12=data.log$v_senspe, v13 = data.log$v_senlnHR, v23=data.log$v_spelnHR,
     p=pp, ci.level=ci.level,
     parset=parset)
-  
+
   }
 
  ## estimation ----
 
  res <- NULL
 
-  
+
   fit_at_time <- function(tt) {
-    lapply(senp.p, function(pp) f(tt = tt, pp = pp))
+
+    data.log <- convert.dt.tsroc(
+      time.point = tt, study.os=study.os, time.os, n1.os, n0.os, s1.os, s0.os, data.os,
+      study.lnhr, lnhr, var.lnHR, data.lnhr,
+      time.med, n1.med, n0.med, s1.med, s0.med, data.mt)
+
+    out <- lapply(senp.p, function(pp) f(data.log = data.log, pp = pp))
+
+    ## study-level data (logit sensitivity / specificity) for plot.srocsa(add.study = TRUE)
+    attr(out, "data") <- data.frame(y1 = data.log$u_sen, y2 = data.log$u_spe,
+                                    v1 = data.log$v_sen, v2 = data.log$v_spe)
+    out
   }
 
   if (parallel.ncores == 1L) {
