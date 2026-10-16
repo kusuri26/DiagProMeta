@@ -10,15 +10,15 @@ Authors@R: c(
     ),
     person(
       "Ryota", "Kinugawa",
-      role = c("ctb")
+      role = c("aut", "ctb")
     ),
     person(
       "Kota", "Nakaike",
-      role = c("ctb")
+      role = c("aut", "ctb")
     ),
     person(
       "Yamato", "Hashimoto",
-      role = c("ctb")
+      role = c("aut", "ctb")
     )
   )
 Description: Provides methods for meta-analysis of diagnostic test accuracy

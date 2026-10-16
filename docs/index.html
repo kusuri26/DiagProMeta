@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sensitivity Analysis for Publication Bias on the SROC Curve • DiagProMeta</title>
+<title>Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias • DiagProgMeta</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Sensitivity Analysis for Publication Bias on the SROC Curve">
-<meta property="og:description" content="Likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic (SROC) curve in meta-analysis of diagnostic test accuracy, and on the time-dependent SROC curve in meta-analysis of prognostic studies.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias">
+<meta property="og:description" content="Provides methods for meta-analysis of diagnostic test accuracy and prognostic studies. The package estimates the summary receiver operating characteristic (SROC) curve for diagnostic test accuracy and the time-dependent SROC curve for prognostic studies. It also provides likelihood-based sensitivity analyses to assess the potential impact of publication bias on these curves.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +32,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">DiagProMeta</a>
+        <a class="navbar-link" href="index.html">DiagProgMeta</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
@@ -41,6 +41,9 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -58,12 +61,40 @@
 <div class="section level1">
 <div class="page-header"><h1 id="diagprometa">DiagProMeta<a class="anchor" aria-label="anchor" href="#diagprometa"></a>
 </h1></div>
-<p><strong>Sensitivity Analysis for Publication Bias on the SROC Curve</strong></p>
-<p><code>DiagProMeta</code> is an R package for the likelihood-based sensitivity analysis for publication bias</p>
+<p><strong>Meta-analysis of diagnostic and prognostic studies: SROC curves and sensitivity analysis for publication bias</strong></p>
+<p><code>DiagProgMeta</code> is an R package for the meta-analysis of</p>
 <ul>
-<li>on the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC) in meta-analysis of diagnostic test accuracy (Zhou et al., 2023), and</li>
-<li>on the time-dependent SROC curve and SAUC in meta-analysis of prognostic studies, where the time-dependent sensitivity and specificity are reconstructed from the published survival probabilities (Combescure et al., 2016).</li>
+<li>
+<strong>diagnostic test accuracy (DTA) studies</strong>: the summary receiver operating characteristic (SROC) curve and the area under the SROC curve (SAUC) by the bivariate random-effects model (Reitsma et al., 2005), and</li>
+<li>
+<strong>prognostic studies</strong>: the time-dependent SROC curve and SAUC, where the time-dependent sensitivity and specificity are reconstructed from the published survival probabilities (Combescure et al., 2016; Hattori and Zhou, 2016),</li>
 </ul>
+<p>each with a <strong>likelihood-based sensitivity analysis for publication bias</strong> (Zhou et al., 2023).</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th></th>
+<th>Without publication bias</th>
+<th>Sensitivity analysis for publication bias</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Diagnostic studies (SROC)</td>
+<td><code><a href="reference/reitsma.sroc.html">reitsma.sroc()</a></code></td>
+<td><code><a href="reference/srocsa.t.html">srocsa.t()</a></code></td>
+</tr>
+<tr>
+<td>Prognostic studies (time-dependent SROC)</td>
+<td><code><a href="reference/hattori.tsroc.html">hattori.tsroc()</a></code></td>
+<td><code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code></td>
+</tr>
+</tbody>
+</table>
+<p>All four fitting functions come with <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods.</p>
 <p>The repository is named <code>srocsa</code>, but the package name is <code>DiagProMeta</code>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -73,62 +104,594 @@
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kusuri26/srocsa"</span><span class="op">)</span></span></code></pre></div>
 <p><code>DiagProMeta</code> requires R (&gt;= 3.5) and imports <code>lifecycle</code>, <code>mixmeta</code>, and <code>numDeriv</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DiagProgMeta</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="example-1-diagnostic-studies-sroc-curve">Example 1: diagnostic studies (SROC curve)<a class="anchor" aria-label="anchor" href="#example-1-diagnostic-studies-sroc-curve"></a>
 </h2>
-<p>The IVD data (Safdar et al., 2005) contain the 2 x 2 tables (<code>TP</code>, <code>FN</code>, <code>FP</code>, <code>TN</code>) of 33 diagnostic studies.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DiagProMeta</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IVD</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## sensitivity analysis for the marginal selection probabilities p = 1, 0.8, 0.6</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/srocsa.t.html">srocsa.t</a></span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, TN <span class="op">=</span> <span class="va">TN</span>, FP <span class="op">=</span> <span class="va">FP</span>, data <span class="op">=</span> <span class="va">IVD</span>, sa.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">fit</span></span></code></pre></div>
-<pre><code>SAUC Estimates
--------------------------------------------
-Marginal p    SAUC      SE   CI.low   CI.up
--------------------------------------------
-p = 1        0.874   0.029    0.806   0.920
-p = 0.8      0.871   0.030    0.800   0.919
-p = 0.6      0.822   0.041    0.727   0.889</code></pre>
-<p>(Only the SAUC table is shown. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> also shows the convergence of the optimizer and the parameter estimates with their standard errors.)</p>
+<p>The <code>IVD</code> data (Safdar et al., 2005) contain the 2 x 2 tables (<code>TP</code>, <code>FN</code>, <code>FP</code>, <code>TN</code>) of 33 diagnostic studies.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IVD</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">IVD</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   study TP FN  FP  TN cutoff.grp type cutoff</span></span>
+<span><span class="co">#&gt; 1     1 12  0  29 289          1   SQ     15</span></span>
+<span><span class="co">#&gt; 2     2 10  2  14  72          2   SQ   1000</span></span>
+<span><span class="co">#&gt; 3     3 17  1  36  85          1   SQ     15</span></span>
+<span><span class="co">#&gt; 4     4 13  0  18  67          2   SQ   1000</span></span>
+<span><span class="co">#&gt; 5     5  4  0  21 225          1   SQ     15</span></span>
+<span><span class="co">#&gt; 6     6 15  2 122 403          1   SQ     15</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="without-publication-bias-reitsmasroc">Without publication bias: <code>reitsma.sroc()</code>
+<a class="anchor" aria-label="anchor" href="#without-publication-bias-reitsmasroc"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit.sroc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/reitsma.sroc.html">reitsma.sroc</a></span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, FP <span class="op">=</span> <span class="va">FP</span>, TN <span class="op">=</span> <span class="va">TN</span>, data <span class="op">=</span> <span class="va">IVD</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.sroc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; SROC curve: bivariate random-effects model (Reitsma et al., 2005)</span></span>
+<span><span class="co">#&gt; Publication bias is not considered</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   K Conv  SAUC         95% CI  Sens         95% CI  Spec         95% CI</span></span>
+<span><span class="co">#&gt;  33  yes 0.874 [0.806, 0.920] 0.815 [0.757, 0.862] 0.861 [0.821, 0.893]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Estimates (tau1, tau2: between-study SDs; rho: correlation):</span></span>
+<span><span class="co">#&gt;    mu1   mu2  tau1  tau2    rho</span></span>
+<span><span class="co">#&gt;  1.484 1.824 0.597 0.826 -0.424</span></span></code></pre></div>
+<p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> adds the standard errors and confidence intervals of all the parameters and the summary sensitivity, specificity, and SAUC.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.sroc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; SROC curve: bivariate random-effects model (Reitsma et al., 2005)</span></span>
+<span><span class="co">#&gt; Publication bias is not considered</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; Results</span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; Number of studies: 33</span></span>
+<span><span class="co">#&gt; Convergence:       yes (relative convergence (4))</span></span>
+<span><span class="co">#&gt; Log-likelihood:    -31.076</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameters (tau1, tau2: between-study SDs; rho: correlation)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;      Estimate    SE          95% CI</span></span>
+<span><span class="co">#&gt; mu1     1.484 0.177  [1.136, 1.832]</span></span>
+<span><span class="co">#&gt; mu2     1.824 0.154  [1.522, 2.125]</span></span>
+<span><span class="co">#&gt; tau1    0.597 0.175  [0.336, 1.062]</span></span>
+<span><span class="co">#&gt; tau2    0.826 0.117  [0.626, 1.090]</span></span>
+<span><span class="co">#&gt; rho    -0.424 0.236 [-0.769, 0.111]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Summary measures</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;             Estimate         95% CI</span></span>
+<span><span class="co">#&gt; Sensitivity    0.815 [0.757, 0.862]</span></span>
+<span><span class="co">#&gt; Specificity    0.861 [0.821, 0.893]</span></span>
+<span><span class="co">#&gt; SAUC           0.874 [0.806, 0.920]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; All estimates (par.all)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  1.484  1.824  0.357  0.683 -0.209  0.874  0.815  0.861</span></span></code></pre></div>
+<p>The SROC curve with its pointwise confidence band, the summary point with its confidence region, and the studies (point size proportional to the precision):</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.sroc</span>, plot.ci <span class="op">=</span> <span class="cn">TRUE</span>, spoint.region <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     add.study <span class="op">=</span> <span class="cn">TRUE</span>, study.size <span class="op">=</span> <span class="st">"precision"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-sroc-reitsma-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="sensitivity-analysis-for-publication-bias-srocsat">Sensitivity analysis for publication bias: <code>srocsa.t()</code>
+<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-for-publication-bias-srocsat"></a>
+</h3>
+<p>The model is fitted for each marginal selection probability <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> in <code>sa.p</code>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p = 1</annotation></semantics></math> corresponds to no publication bias; a smaller <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> assumes that a smaller proportion of the studies is published.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit.sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/srocsa.t.html">srocsa.t</a></span><span class="op">(</span>TP <span class="op">=</span> <span class="va">TP</span>, FN <span class="op">=</span> <span class="va">FN</span>, TN <span class="op">=</span> <span class="va">TN</span>, FP <span class="op">=</span> <span class="va">FP</span>, data <span class="op">=</span> <span class="va">IVD</span>, sa.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.sa</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 33 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.874   0.029    0.806   0.920</span></span>
+<span><span class="co">#&gt; p = 0.8      0.871   0.030    0.800   0.919</span></span>
+<span><span class="co">#&gt; p = 0.6      0.822   0.041    0.727   0.889</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta         alpha</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        1.484 (0.177)   1.824 (0.154)   0.597 (0.175)   0.826 (0.117)   -0.424 (0.236)               -             -</span></span>
+<span><span class="co">#&gt; p = 0.8      1.472 (0.177)   1.818 (0.154)   0.607 (0.179)   0.828 (0.118)   -0.404 (0.241)   5.000 (5.396)    -7.943 (-)</span></span>
+<span><span class="co">#&gt; p = 0.6      1.234 (0.150)   1.681 (0.153)   0.618 (0.202)   0.850 (0.127)   -0.275 (0.270)   5.000 (4.126)   -10.451 (-)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## tables of the SAUC and the parameter estimates</span></span>
-<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.sa</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Input:</span></span>
+<span><span class="co">#&gt; srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, </span></span>
+<span><span class="co">#&gt;     0.8, 0.6))</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 33 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.874   0.029    0.806   0.920</span></span>
+<span><span class="co">#&gt; p = 0.8      0.871   0.030    0.800   0.919</span></span>
+<span><span class="co">#&gt; p = 0.6      0.822   0.041    0.727   0.889</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta         alpha</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        1.484 (0.177)   1.824 (0.154)   0.597 (0.175)   0.826 (0.117)   -0.424 (0.236)               -             -</span></span>
+<span><span class="co">#&gt; p = 0.8      1.472 (0.177)   1.818 (0.154)   0.607 (0.179)   0.828 (0.118)   -0.404 (0.241)   5.000 (5.396)    -7.943 (-)</span></span>
+<span><span class="co">#&gt; p = 0.6      1.234 (0.150)   1.681 (0.153)   0.618 (0.202)   0.850 (0.127)   -0.275 (0.270)   5.000 (4.126)   -10.451 (-)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; All elements of the fitted models</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   c1^2   c2^2 </span></span>
+<span><span class="co">#&gt;  1.484  1.824  0.357  0.683 -0.209  0.100  0.900 </span></span>
+<span><span class="co">#&gt;   beta  alpha   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;     NA     NA  0.874  0.815  0.861 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 0.8</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   c1^2   c2^2 </span></span>
+<span><span class="co">#&gt;  1.472  1.818  0.368  0.686 -0.203  0.673  0.327 </span></span>
+<span><span class="co">#&gt;   beta  alpha   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  5.000 -7.943  0.871  0.813  0.860 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 0.6</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;     mu1     mu2  tau1^2  tau2^2   tau12    c1^2 </span></span>
+<span><span class="co">#&gt;   1.234   1.681   0.382   0.723  -0.145   0.623 </span></span>
+<span><span class="co">#&gt;    c2^2    beta   alpha    sauc    sens    spec </span></span>
+<span><span class="co">#&gt;   0.377   5.000 -10.451   0.822   0.775   0.843</span></span>
 <span><span class="va">res</span><span class="op">$</span><span class="va">sauc</span></span>
+<span><span class="co">#&gt;     p conv      sauc    sauc.se   sauc.lb   sauc.ub</span></span>
+<span><span class="co">#&gt; 1 1.0    1 0.8735863 0.02875132 0.8057723 0.9200719</span></span>
+<span><span class="co">#&gt; 2 0.8    1 0.8707545 0.02996087 0.7999308 0.9190442</span></span>
+<span><span class="co">#&gt; 3 0.6    1 0.8218932 0.04115706 0.7267450 0.8889721</span></span>
 <span><span class="va">res</span><span class="op">$</span><span class="va">coef</span></span>
+<span><span class="co">#&gt;     p      mu1    mu1.se      mu2    mu2.se      tau1   tau1.se      tau2</span></span>
+<span><span class="co">#&gt; 1 1.0 1.483992 0.1774775 1.823652 0.1538733 0.5974405 0.1753900 0.8261892</span></span>
+<span><span class="co">#&gt; 2 0.8 1.472137 0.1766591 1.817753 0.1539493 0.6069136 0.1793773 0.8284942</span></span>
+<span><span class="co">#&gt; 3 0.6 1.234145 0.1502265 1.680930 0.1529153 0.6182781 0.2015533 0.8500685</span></span>
+<span><span class="co">#&gt;     tau2.se        rho    rho.se beta  beta.se      alpha alpha.se</span></span>
+<span><span class="co">#&gt; 1 0.1167857 -0.4244259 0.2363536   NA       NA         NA       NA</span></span>
+<span><span class="co">#&gt; 2 0.1177810 -0.4038358 0.2410633    5 5.395541  -7.942993       NA</span></span>
+<span><span class="co">#&gt; 3 0.1274834 -0.2750564 0.2703518    5 4.125752 -10.451160       NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## SROC curves and summary points for each p, with the studies</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.sa</span>, sroc.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-sroc-sa-1.png"><!-- --></p>
+<p>The change of the SROC curve and SAUC as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> decreases shows the potential impact of publication bias.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example-2-prognostic-studies-time-dependent-sroc-curve">Example 2: prognostic studies (time-dependent SROC curve)<a class="anchor" aria-label="anchor" href="#example-2-prognostic-studies-time-dependent-sroc-curve"></a>
+</h2>
+<p>The <code>Ki67</code> data are a list of three data frames:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>Element</th>
+<th>Content</th>
+<th>Columns used below</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>Ki67$OS</code></td>
+<td>Survival probabilities of the test-positive (1) and test-negative (0) groups, one row for each study and each time point</td>
+<td>
+<code>study</code>, <code>t</code>, <code>n1</code>, <code>n0</code>, <code>s1</code>, <code>s0</code>
+</td>
+</tr>
+<tr>
+<td><code>Ki67$HR</code></td>
+<td>Hazard ratio (group 1 vs 0) and its 95% CI, one row for each study</td>
+<td>
+<code>study</code>, <code>HR</code>, <code>ci.low</code>, <code>ci.up</code>
+</td>
+</tr>
+<tr>
+<td><code>Ki67$MT</code></td>
+<td>Survival probabilities at the median follow-up time, used to estimate the censoring distribution</td>
+<td>
+<code>mct_mo</code>, <code>n1</code>, <code>n0</code>, <code>s1_mct</code>, <code>s0_mct</code>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Ki67</span><span class="op">)</span></span>
+<span><span class="va">Ki67_OS</span> <span class="op">&lt;-</span> <span class="va">Ki67</span><span class="op">$</span><span class="va">OS</span></span>
+<span><span class="va">Ki67_HR</span> <span class="op">&lt;-</span> <span class="va">Ki67</span><span class="op">$</span><span class="va">HR</span></span>
+<span><span class="va">Ki67_MT</span> <span class="op">&lt;-</span> <span class="va">Ki67</span><span class="op">$</span><span class="va">MT</span></span>
 <span></span>
-<span><span class="co">## SROC curves and summary points for each p</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-sroc.png" width="450" alt="SROC curves for p = 1, 0.8, 0.6"></p>
-<p><code>p = 1</code> corresponds to no publication bias. A smaller <code>p</code> assumes that a smaller proportion of the studies is published, and the change of the SROC curve and SAUC shows the potential impact of publication bias.</p>
+<span><span class="co">## lnHR and its variance from the HR and its 95% CI</span></span>
+<span><span class="va">Ki67_HR</span><span class="op">$</span><span class="va">lnHR</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">Ki67_HR</span><span class="op">$</span><span class="va">HR</span><span class="op">)</span></span>
+<span><span class="va">Ki67_HR</span><span class="op">$</span><span class="va">lnHR.var</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">Ki67_HR</span><span class="op">$</span><span class="va">ci.up</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">Ki67_HR</span><span class="op">$</span><span class="va">ci.low</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="without-publication-bias-hattoritsroc">Without publication bias: <code>hattori.tsroc()</code>
+<a class="anchor" aria-label="anchor" href="#without-publication-bias-hattoritsroc"></a>
+</h3>
+<p>The bivariate random-effects model is fitted at each time point in <code>time.points</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit.tsroc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hattori.tsroc.html">hattori.tsroc</a></span><span class="op">(</span></span>
+<span>  time.points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">24</span>, <span class="fl">36</span>, <span class="fl">60</span><span class="op">)</span>,</span>
+<span>  study.os <span class="op">=</span> <span class="va">study</span>, time.os <span class="op">=</span> <span class="va">t</span>, n1.os <span class="op">=</span> <span class="va">n1</span>, n0.os <span class="op">=</span> <span class="va">n0</span>, s1.os <span class="op">=</span> <span class="va">s1</span>, s0.os <span class="op">=</span> <span class="va">s0</span>,</span>
+<span>  data.os <span class="op">=</span> <span class="va">Ki67_OS</span>,</span>
+<span>  study.lnhr <span class="op">=</span> <span class="va">study</span>, lnhr <span class="op">=</span> <span class="va">lnHR</span>, var.lnHR <span class="op">=</span> <span class="va">lnHR.var</span>,</span>
+<span>  data.lnhr <span class="op">=</span> <span class="va">Ki67_HR</span>,</span>
+<span>  time.med <span class="op">=</span> <span class="va">mct_mo</span>, n1.med <span class="op">=</span> <span class="va">n1</span>, n0.med <span class="op">=</span> <span class="va">n0</span>, s1.med <span class="op">=</span> <span class="va">s1_mct</span>, s0.med <span class="op">=</span> <span class="va">s0_mct</span>,</span>
+<span>  data.mt <span class="op">=</span> <span class="va">Ki67_MT</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## one row for each time point</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.tsroc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Time-dependent SROC curve: bivariate random-effects model at each time point</span></span>
+<span><span class="co">#&gt; (Hattori and Zhou, 2016); publication bias is not considered</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;         K Conv  SAUC         95% CI  Sens         95% CI  Spec         95% CI</span></span>
+<span><span class="co">#&gt; t = 24 23  yes 0.713 [0.628, 0.785] 0.743 [0.647, 0.821] 0.562 [0.506, 0.617]</span></span>
+<span><span class="co">#&gt; t = 36 23  yes 0.651 [0.610, 0.690] 0.662 [0.577, 0.738] 0.570 [0.515, 0.624]</span></span>
+<span><span class="co">#&gt; t = 60 21  yes 0.647 [0.610, 0.682] 0.630 [0.567, 0.688] 0.587 [0.522, 0.649]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Estimates (tau1, tau2: between-study SDs; rho: correlation):</span></span>
+<span><span class="co">#&gt;          mu1   mu2  tau1  tau2    rho</span></span>
+<span><span class="co">#&gt; t = 24 1.063 0.249 0.911 0.520 -0.515</span></span>
+<span><span class="co">#&gt; t = 36 0.673 0.284 0.656 0.512 -0.877</span></span>
+<span><span class="co">#&gt; t = 60 0.532 0.353 0.430 0.577 -0.928</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## estimates with SEs and confidence intervals at each time point</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.tsroc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Time-dependent SROC curve: bivariate random-effects model at each time point</span></span>
+<span><span class="co">#&gt; (Hattori and Zhou, 2016); publication bias is not considered</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; hattori.tsroc(time.points = c(24, 36, 60), study.os = study, </span></span>
+<span><span class="co">#&gt;     time.os = t, n1.os = n1, n0.os = n0, s1.os = s1, s0.os = s0, </span></span>
+<span><span class="co">#&gt;     data.os = Ki67_OS, study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var, </span></span>
+<span><span class="co">#&gt;     data.lnhr = Ki67_HR, time.med = mct_mo, n1.med = n1, n0.med = n0, </span></span>
+<span><span class="co">#&gt;     s1.med = s1_mct, s0.med = s0_mct, data.mt = Ki67_MT)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; t = 24</span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; Number of studies: 23</span></span>
+<span><span class="co">#&gt; Convergence:       yes (relative convergence (4))</span></span>
+<span><span class="co">#&gt; Log-likelihood:    -10.651</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameters (tau1, tau2: between-study SDs; rho: correlation)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;      Estimate    SE          95% CI</span></span>
+<span><span class="co">#&gt; mu1     1.063 0.234  [0.604, 1.522]</span></span>
+<span><span class="co">#&gt; mu2     0.249 0.116  [0.023, 0.476]</span></span>
+<span><span class="co">#&gt; tau1    0.911 0.198  [0.595, 1.395]</span></span>
+<span><span class="co">#&gt; tau2    0.520 0.096  [0.362, 0.746]</span></span>
+<span><span class="co">#&gt; rho    -0.515 0.259 [-0.852, 0.122]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Summary measures</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;             Estimate         95% CI</span></span>
+<span><span class="co">#&gt; Sensitivity    0.743 [0.647, 0.821]</span></span>
+<span><span class="co">#&gt; Specificity    0.562 [0.506, 0.617]</span></span>
+<span><span class="co">#&gt; SAUC           0.713 [0.628, 0.785]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; All estimates (par.all)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  1.063  0.249  0.830  0.270 -0.244  0.713  0.743  0.562 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; t = 36</span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; Number of studies: 23</span></span>
+<span><span class="co">#&gt; Convergence:       yes (relative convergence (4))</span></span>
+<span><span class="co">#&gt; Log-likelihood:    -4.470</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameters (tau1, tau2: between-study SDs; rho: correlation)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;      Estimate    SE          95% CI</span></span>
+<span><span class="co">#&gt; mu1     0.673 0.185  [0.310, 1.036]</span></span>
+<span><span class="co">#&gt; mu2     0.284 0.115  [0.059, 0.509]</span></span>
+<span><span class="co">#&gt; tau1    0.656 0.209  [0.351, 1.224]</span></span>
+<span><span class="co">#&gt; tau2    0.512 0.095  [0.356, 0.737]</span></span>
+<span><span class="co">#&gt; rho    -0.877 0.161 [-0.992, 0.005]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Summary measures</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;             Estimate         95% CI</span></span>
+<span><span class="co">#&gt; Sensitivity    0.662 [0.577, 0.738]</span></span>
+<span><span class="co">#&gt; Specificity    0.570 [0.515, 0.624]</span></span>
+<span><span class="co">#&gt; SAUC           0.651 [0.610, 0.690]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; All estimates (par.all)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  0.673  0.284  0.430  0.262 -0.295  0.651  0.662  0.570 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; t = 60</span></span>
+<span><span class="co">#&gt; ============================================================</span></span>
+<span><span class="co">#&gt; Number of studies: 21</span></span>
+<span><span class="co">#&gt; Convergence:       yes (relative convergence (4))</span></span>
+<span><span class="co">#&gt; Log-likelihood:    3.044</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameters (tau1, tau2: between-study SDs; rho: correlation)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;      Estimate    SE          95% CI</span></span>
+<span><span class="co">#&gt; mu1     0.532 0.133  [0.271, 0.792]</span></span>
+<span><span class="co">#&gt; mu2     0.353 0.135  [0.089, 0.617]</span></span>
+<span><span class="co">#&gt; tau1    0.430 0.153  [0.215, 0.862]</span></span>
+<span><span class="co">#&gt; tau2    0.577 0.110  [0.397, 0.837]</span></span>
+<span><span class="co">#&gt; rho    -0.928 0.124 [-0.998, 0.109]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Summary measures</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;             Estimate         95% CI</span></span>
+<span><span class="co">#&gt; Sensitivity    0.630 [0.567, 0.688]</span></span>
+<span><span class="co">#&gt; Specificity    0.587 [0.522, 0.649]</span></span>
+<span><span class="co">#&gt; SAUC           0.647 [0.610, 0.682]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; All estimates (par.all)</span></span>
+<span><span class="co">#&gt; ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  0.532  0.353  0.185  0.333 -0.230  0.647  0.630  0.587</span></span></code></pre></div>
+<p>By default, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> draws one plot for each time point; in an interactive session, press <kbd>Return</kbd> to move to the next time point. A single time point can be selected by <code>time</code>, and all the time points can be overlaid in one panel by <code>overlay = TRUE</code>.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsroc</span><span class="op">)</span>                              <span class="co"># one plot per time point</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsroc</span>, time <span class="op">=</span> <span class="fl">36</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># one time point with the studies</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsroc</span>, overlay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>              <span class="co"># all the time points in one panel</span></span></code></pre></div>
+<p><img src="reference/figures/README-tsroc-overlay-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="sensitivity-analysis-for-publication-bias-tsrocsalrt">Sensitivity analysis for publication bias: <code>tsrocsa.lrt()</code>
+<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-for-publication-bias-tsrocsalrt"></a>
+</h3>
+<p>The selection function is on the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-statistic of lnHR. The model is fitted for each time point in <code>time.points</code> and each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> in <code>senp.p</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit.tsa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt</a></span><span class="op">(</span></span>
+<span>  time.points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">36</span>, <span class="fl">60</span><span class="op">)</span>,</span>
+<span>  study.os <span class="op">=</span> <span class="va">study</span>, time.os <span class="op">=</span> <span class="va">t</span>, n1.os <span class="op">=</span> <span class="va">n1</span>, n0.os <span class="op">=</span> <span class="va">n0</span>, s1.os <span class="op">=</span> <span class="va">s1</span>, s0.os <span class="op">=</span> <span class="va">s0</span>,</span>
+<span>  data.os <span class="op">=</span> <span class="va">Ki67_OS</span>,</span>
+<span>  study.lnhr <span class="op">=</span> <span class="va">study</span>, lnhr <span class="op">=</span> <span class="va">lnHR</span>, var.lnHR <span class="op">=</span> <span class="va">lnHR.var</span>,</span>
+<span>  data.lnhr <span class="op">=</span> <span class="va">Ki67_HR</span>,</span>
+<span>  time.med <span class="op">=</span> <span class="va">mct_mo</span>, n1.med <span class="op">=</span> <span class="va">n1</span>, n0.med <span class="op">=</span> <span class="va">n0</span>, s1.med <span class="op">=</span> <span class="va">s1_mct</span>, s0.med <span class="op">=</span> <span class="va">s0_mct</span>,</span>
+<span>  data.mt <span class="op">=</span> <span class="va">Ki67_MT</span>,</span>
+<span>  senp.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.8</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit.tsa</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 23 </span></span>
+<span><span class="co">#&gt; time              : 36 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.651   0.020    0.610   0.690</span></span>
+<span><span class="co">#&gt; p = 0.8      0.646   0.021    0.605   0.686</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.673 (0.185)   0.284 (0.115)   0.656 (0.209)   0.512 (0.095)   -0.877 (0.161)               -           -</span></span>
+<span><span class="co">#&gt; p = 0.8      0.680 (0.192)   0.258 (0.117)   0.680 (0.214)   0.509 (0.096)   -0.882 (0.155)   0.399 (0.369)   0.308 (-)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 21 </span></span>
+<span><span class="co">#&gt; time              : 60 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.647   0.018    0.610   0.682</span></span>
+<span><span class="co">#&gt; p = 0.8      0.643   0.019    0.604   0.680</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.532 (0.133)   0.353 (0.135)   0.430 (0.153)   0.577 (0.110)   -0.928 (0.124)               -           -</span></span>
+<span><span class="co">#&gt; p = 0.8      0.524 (0.138)   0.330 (0.138)   0.457 (0.154)   0.572 (0.110)   -0.909 (0.126)   0.254 (0.544)   0.434 (-)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit.tsa</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 23 </span></span>
+<span><span class="co">#&gt; time              : 36 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.651   0.020    0.610   0.690</span></span>
+<span><span class="co">#&gt; p = 0.8      0.646   0.021    0.605   0.686</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.673 (0.185)   0.284 (0.115)   0.656 (0.209)   0.512 (0.095)   -0.877 (0.161)               -           -</span></span>
+<span><span class="co">#&gt; p = 0.8      0.680 (0.192)   0.258 (0.117)   0.680 (0.214)   0.509 (0.096)   -0.882 (0.155)   0.399 (0.369)   0.308 (-)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; Model optimization</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of studies : 21 </span></span>
+<span><span class="co">#&gt; time              : 60 </span></span>
+<span><span class="co">#&gt; Optimizer         : 1 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * 1 indicates converged</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SAUC Estimates</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p    SAUC      SE   CI.low   CI.up</span></span>
+<span><span class="co">#&gt; -------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.647   0.018    0.610   0.682</span></span>
+<span><span class="co">#&gt; p = 0.8      0.643   0.019    0.604   0.680</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameter Estimates (SE)</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; Marginal p           mu_se           mu_sp          tau_se          tau_sp              rho            beta       alpha</span></span>
+<span><span class="co">#&gt; -----------------------------------------------------------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; p = 1        0.532 (0.133)   0.353 (0.135)   0.430 (0.153)   0.577 (0.110)   -0.928 (0.124)               -           -</span></span>
+<span><span class="co">#&gt; p = 0.8      0.524 (0.138)   0.330 (0.138)   0.457 (0.154)   0.572 (0.110)   -0.909 (0.126)   0.254 (0.544)   0.434 (-)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; All elements of the fitted models</span></span>
+<span><span class="co">#&gt; ==================================================</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; time = 36, p = 1</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens </span></span>
+<span><span class="co">#&gt;  0.673  0.284  0.430  0.262 -0.295  0.651  0.662 </span></span>
+<span><span class="co">#&gt;   spec </span></span>
+<span><span class="co">#&gt;  0.570 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; time = 36, p = 0.8</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2    mu3 tau1^2 tau2^2 tau3^2  tau12 </span></span>
+<span><span class="co">#&gt;  0.680  0.258  0.614  0.462  0.259  0.165 -0.305 </span></span>
+<span><span class="co">#&gt;  tau23  tau13   beta  alpha   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  0.079 -0.005  0.399  0.308  0.646  0.664  0.564 </span></span>
+<span><span class="co">#&gt;     hr </span></span>
+<span><span class="co">#&gt;  1.295 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; time = 60, p = 1</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2 tau1^2 tau2^2  tau12   sauc   sens </span></span>
+<span><span class="co">#&gt;  0.532  0.353  0.185  0.333 -0.230  0.647  0.630 </span></span>
+<span><span class="co">#&gt;   spec </span></span>
+<span><span class="co">#&gt;  0.587 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; time = 60, p = 0.8</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;    mu1    mu2    mu3 tau1^2 tau2^2 tau3^2  tau12 </span></span>
+<span><span class="co">#&gt;  0.524  0.330  0.617  0.209  0.327  0.126 -0.237 </span></span>
+<span><span class="co">#&gt;  tau23  tau13   beta  alpha   sauc   sens   spec </span></span>
+<span><span class="co">#&gt;  0.068  0.036  0.254  0.434  0.643  0.628  0.582 </span></span>
+<span><span class="co">#&gt;     hr </span></span>
+<span><span class="co">#&gt;  1.391</span></span></code></pre></div>
+<p>One plot for each time point (curves for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>), or all in one panel (color: time point, line type: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>):</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsa</span>, time <span class="op">=</span> <span class="fl">60</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-tsrocsa-time-1.png"><!-- --></p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsa</span>, overlay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-tsrocsa-overlay-1.png"><!-- --></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
 </h2>
 <div class="section level3">
-<h3 id="sensitivity-analysis-on-the-sroc-curve-srocsat">Sensitivity analysis on the SROC curve (<code>srocsa.t</code>)<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-on-the-sroc-curve-srocsat"></a>
+<h3 id="sroc-curve-reitsmasroc">SROC curve (<code>reitsma.sroc</code>)<a class="anchor" aria-label="anchor" href="#sroc-curve-reitsmasroc"></a>
 </h3>
 <p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">y_{1i}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">y_{2i}</annotation></semantics></math> be the logit-transformed sensitivity and specificity of study <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">v_{1i}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">v_{2i}</annotation></semantics></math> be their variances. The bivariate random-effects model (Reitsma et al., 2005) is</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>,</mo><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mo>,</mo><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>,</mo><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi mathvariant="normal">Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 (y_{1i}, y_{2i})^\top \sim N\left((\mu_1, \mu_2)^\top,\ \mathrm{diag}(v_{1i}, v_{2i}) + \Omega\right),
 </annotation></semantics></math></p>
-<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math> has the between-study standard deviations <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>τ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\tau_1, \tau_2</annotation></semantics></math> and correlation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>. The probability of publishing study <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is modeled by the selection function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><mi>β</mi><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi(\alpha + \beta t_i)</annotation></semantics></math> with</p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math> has the between-study standard deviations <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>τ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\tau_1, \tau_2</annotation></semantics></math> and correlation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>. The SROC curve is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi></mrow><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">R</mi></mrow><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>−</mo><mfrac><mrow><msub><mi>τ</mi><mn>1</mn></msub><mi>ρ</mi></mrow><msub><mi>τ</mi><mn>2</mn></msub></mfrac><mrow><mo stretchy="true" form="prefix">{</mo><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi></mrow><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">F</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">R</mi></mrow><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">}</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathrm{logit}(\mathrm{TPR}) = \mu_1 - \frac{\tau_1 \rho}{\tau_2}\left\{\mathrm{logit}(\mathrm{FPR}) + \mu_2\right\},
+</annotation></semantics></math></p>
+<p>and the SAUC is the area under it. The confidence interval of the SAUC is calculated by the delta method on the logit scale.</p>
+</div>
+<div class="section level3">
+<h3 id="sensitivity-analysis-on-the-sroc-curve-srocsat">Sensitivity analysis on the SROC curve (<code>srocsa.t</code>)<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-on-the-sroc-curve-srocsat"></a>
+</h3>
+<p>The probability of publishing study <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is modeled by the selection function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><mi>β</mi><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi(\alpha + \beta t_i)</annotation></semantics></math> with</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>c</mi><mn>1</mn></msub><msub><mi>y</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mn>2</mn></msub><msub><mi>y</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub></mrow><msqrt><mrow><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><msub><mi>v</mi><mrow><mn>1</mn><mi>i</mi></mrow></msub><mo>+</mo><msubsup><mi>c</mi><mn>2</mn><mn>2</mn></msubsup><msub><mi>v</mi><mrow><mn>2</mn><mi>i</mi></mrow></msub></mrow></msqrt></mfrac><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>c</mi><mn>1</mn></msub><mo>,</mo><msub><mi>c</mi><mn>2</mn></msub><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="1.0em"></mspace><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>c</mi><mn>2</mn><mn>2</mn></msubsup><mo>=</mo><mn>1</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
 t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad c_1, c_2 \ge 0, \quad c_1^2 + c_2^2 = 1.
 </annotation></semantics></math></p>
 <p>For a given marginal selection probability <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> is determined such that the mean of the inverse of the marginal selection probabilities of the observed studies equals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">1/p</annotation></semantics></math>. The model is fitted by the maximum likelihood method for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> in <code>sa.p</code>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>c</mi><mn>1</mn><mn>2</mn></msubsup><annotation encoding="application/x-tex">c_1^2</annotation></semantics></math> is estimated by default, or fixed by the argument <code>c11</code>.</p>
 </div>
 <div class="section level3">
+<h3 id="time-dependent-sroc-curve-hattoritsroc">Time-dependent SROC curve (<code>hattori.tsroc</code>)<a class="anchor" aria-label="anchor" href="#time-dependent-sroc-curve-hattoritsroc"></a>
+</h3>
+<p>At each time point <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, the time-dependent sensitivity and specificity are reconstructed from the survival probabilities <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_1(t)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_0(t)</annotation></semantics></math> of the test-positive and test-negative groups (Combescure et al., 2016):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><msub><mi>S</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><msub><mi>q</mi><mn>1</mn></msub></mrow><mrow><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><msub><mi>S</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><msub><mi>q</mi><mn>1</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><msub><mi>S</mi><mn>0</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><msub><mi>q</mi><mn>0</mn></msub></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><msub><mi>S</mi><mn>0</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>q</mi><mn>0</mn></msub></mrow><mrow><msub><mi>S</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>q</mi><mn>1</mn></msub><mo>+</mo><msub><mi>S</mi><mn>0</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>q</mi><mn>0</mn></msub></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathrm{Se}(t) = \frac{\{1 - S_1(t)\} q_1}{\{1 - S_1(t)\} q_1 + \{1 - S_0(t)\} q_0}, \qquad
+\mathrm{Sp}(t) = \frac{S_0(t) q_0}{S_1(t) q_1 + S_0(t) q_0},
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mn>1</mn></msub><annotation encoding="application/x-tex">q_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mn>0</mn></msub><annotation encoding="application/x-tex">q_0</annotation></semantics></math> are the proportions of the two groups. Their within-study variances and covariance are calculated from the survival probabilities up to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, assuming a censoring distribution common to all the studies, estimated from the median follow-up time. The bivariate random-effects model (with the within-study covariance) is fitted at each time point (Hattori and Zhou, 2016).</p>
+</div>
+<div class="section level3">
 <h3 id="sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt">Sensitivity analysis on the time-dependent SROC curve (<code>tsrocsa.lrt</code>)<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt"></a>
 </h3>
-<p>At each time point, the time-dependent sensitivity and specificity, and their within-study variances and covariance, are reconstructed from the survival probabilities of the test-positive and test-negative groups (Combescure et al., 2016). The logit-transformed sensitivity, specificity, and the log hazard ratio (lnHR) are modeled by the trivariate random-effects model, combined with the selection function on the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-statistic of lnHR.</p>
-<p>Three data frames are required:</p>
+<p>The logit-transformed sensitivity, specificity, and the log hazard ratio (lnHR) are modeled by the trivariate random-effects model, combined with the selection function on the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-statistic of lnHR. The time-dependent SROC curve and SAUC are calculated from the parameters of the logit-transformed sensitivity and specificity.</p>
+<p>Three data frames are required by <code><a href="reference/hattori.tsroc.html">hattori.tsroc()</a></code> and <code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code>:</p>
 <table class="table">
 <colgroup>
-<col width="12%">
-<col width="87%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
 <th>Argument</th>
@@ -137,14 +700,14 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 <tbody>
 <tr>
 <td><code>data.os</code></td>
-<td>Survival probabilities of the two groups, one row for each study and each time point</td>
+<td>Survival probabilities of the two groups, one row for each study and each time point (sorted by time within each study)</td>
 </tr>
 <tr>
 <td><code>data.lnhr</code></td>
 <td>lnHR and its variance, one row for each study</td>
 </tr>
 <tr>
-<td><code>data.mct</code></td>
+<td><code>data.mt</code></td>
 <td>Survival probabilities at the median follow-up time, used to estimate the censoring distribution</td>
 </tr>
 </tbody>
@@ -157,8 +720,8 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 </h2>
 <table class="table">
 <colgroup>
-<col width="43%">
-<col width="56%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
 <th>Function</th>
@@ -166,42 +729,72 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 </tr></thead>
 <tbody>
 <tr>
+<td><code><a href="reference/reitsma.sroc.html">reitsma.sroc()</a></code></td>
+<td>Bivariate random-effects model for the SROC curve and SAUC, without publication bias</td>
+</tr>
+<tr>
 <td><code><a href="reference/srocsa.t.html">srocsa.t()</a></code></td>
 <td>Sensitivity analysis for publication bias on the SROC curve and SAUC</td>
+</tr>
+<tr>
+<td><code><a href="reference/hattori.tsroc.html">hattori.tsroc()</a></code></td>
+<td>Time-dependent SROC curve and SAUC, without publication bias</td>
 </tr>
 <tr>
 <td><code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code></td>
 <td>Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC</td>
 </tr>
 <tr>
-<td><code><a href="reference/sroc.html">sroc()</a></code></td>
-<td>Bivariate random-effects model for the SROC curve without publication bias</td>
-</tr>
-<tr>
-<td><code><a href="reference/tsroc.html">tsroc()</a></code></td>
-<td>Time-dependent SROC curve without publication bias</td>
-</tr>
-<tr>
 <td><code><a href="reference/sauc.html">sauc()</a></code></td>
 <td>SAUC and its confidence interval (delta method on the logit scale)</td>
 </tr>
+</tbody>
+</table>
+<div class="section level3">
+<h3 id="methods-1">Methods<a class="anchor" aria-label="anchor" href="#methods-1"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>Method</th>
+<th>
+<code>"sroc"</code> objects (<code><a href="reference/reitsma.sroc.html">reitsma.sroc()</a></code>, <code><a href="reference/hattori.tsroc.html">hattori.tsroc()</a></code>)</th>
+<th>
+<code>"srocsa"</code> objects (<code><a href="reference/srocsa.t.html">srocsa.t()</a></code>, <code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code>)</th>
+</tr></thead>
+<tbody>
 <tr>
-<td>
-<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+<td><code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code></td>
+<td>Number of studies, convergence, SAUC, sensitivity, specificity (with CIs), and the parameter estimates; one row for each time point</td>
+<td>SAUC and parameter estimates for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> (and each time point)</td>
+</tr>
+<tr>
+<td><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code></td>
+<td>Estimates, SEs, and CIs of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo>,</mo><msub><mi>τ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>τ</mi><mn>2</mn></msub><mo>,</mo><mi>ρ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mu_1, \mu_2, \tau_1, \tau_2, \rho)</annotation></semantics></math>, log-likelihood, and all estimates</td>
+<td>Tables of the SAUC (<code>$sauc</code>) and the parameter estimates (<code>$coef</code>)</td>
+</tr>
+<tr>
+<td><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code></td>
+<td>SROC curve(s); options <code>time</code>, <code>overlay</code>, <code>plot.ci</code>, <code>spoint.region</code>, <code>add.study</code>
 </td>
-<td>Methods for the <code>"srocsa"</code> objects returned by <code><a href="reference/srocsa.t.html">srocsa.t()</a></code>, <code><a href="reference/tsroc.html">tsroc()</a></code>, and <code><a href="reference/tsrocsa.lrt.html">tsrocsa.lrt()</a></code>
+<td>SROC curves for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>; options <code>time</code>, <code>p</code>, <code>overlay</code>, <code>plot.ci</code>, <code>spoint.region</code>, <code>add.study</code>
 </td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
 <table class="table">
 <colgroup>
-<col width="31%">
-<col width="68%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
 <th>Data</th>
@@ -222,22 +815,26 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 </td>
 <td>Logit-transformed sensitivity and specificity of <code>IVD</code> and <code>CD64</code>, with their variances</td>
 </tr>
+<tr>
+<td><code>Ki67</code></td>
+<td>Meta-analysis of Ki67 as a prognostic marker: a list of the survival data (<code>OS</code>), hazard ratios (<code>HR</code>), and median follow-up times (<code>MT</code>)</td>
+</tr>
 </tbody>
 </table>
-<p>Example data for the time-dependent analysis are not yet included in the package.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ul>
-<li>Zhou Y, Huang A, Hattori S (2023). A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic in meta-analysis of diagnostic test accuracy. <em>Statistics in Medicine</em>, 42(6), 781–798. <a href="https://doi.org/10.1002/sim.9643" class="external-link">doi:10.1002/sim.9643</a>
-</li>
-<li>Combescure C, Daures JP, Foucher Y (2016). A literature-based approach to evaluate the predictive capacity of a marker using time-dependent summary receiver operating characteristics. <em>Statistical Methods in Medical Research</em>, 25(2), 674–685. <a href="https://doi.org/10.1177/0962280212464542" class="external-link">doi:10.1177/0962280212464542</a>
-</li>
-<li>Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005). Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews. <em>Journal of Clinical Epidemiology</em>, 58(10), 982–990. <a href="https://doi.org/10.1016/j.jclinepi.2005.02.022" class="external-link">doi:10.1016/j.jclinepi.2005.02.022</a>
-</li>
-<li>Safdar N, Fine JP, Maki DG (2005). Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection. <em>Annals of Internal Medicine</em>, 142(6), 451–466. <a href="https://doi.org/10.7326/0003-4819-142-6-200503150-00011" class="external-link">doi:10.7326/0003-4819-142-6-200503150-00011</a>
-</li>
+<li><p>Methods</p></li>
+<li><p>Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005). Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews. <em>Journal of Clinical Epidemiology</em>, 58(10), 982–990. <a href="https://doi.org/10.1016/j.jclinepi.2005.02.022" class="external-link">doi:10.1016/j.jclinepi.2005.02.022</a></p></li>
+<li><p>Zhou Y, Huang A, Hattori S (2023). A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic in meta-analysis of diagnostic test accuracy. <em>Statistics in Medicine</em>, 42(6), 781–798. <a href="https://doi.org/10.1002/sim.9643" class="external-link">doi:10.1002/sim.9643</a></p></li>
+<li><p>Hattori S, Zhou XH (2016). Time-dependent summary receiver operating characteristics for meta-analysis of prognostic studies. <em>Statistics in Medicine</em>, 35(26), 4746–4763. <a href="https://doi.org/10.1002/sim.7029" class="external-link">doi:10.1002/sim.7029</a></p></li>
+<li><p>Zhou, Y., Huang, A., &amp; Hattori, S. (2025). Sensitivity analysis for reporting bias on the time-dependent summary receiver operating characteristics curve in meta-analysis of prognosis studies with time-to-event outcomes. <em>Research Synthesis Methods</em>, 16(3), 528–549. <a href="https://doi.org/10.1017/rsm.2025.14" class="external-link">doi:10.1017/rsm.2025.14</a></p></li>
+<li><p>Data</p></li>
+<li><p>Safdar N, Fine JP, Maki DG (2005). Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection. <em>Annals of Internal Medicine</em>, 142(6), 451–466. <a href="https://doi.org/10.7326/0003-4819-142-6-200503150-00011" class="external-link">doi:10.7326/0003-4819-142-6-200503150-00011</a></p></li>
+<li><p>Li, S., Huang, X., Chen, Z., Zhong, H., Peng, Q., Deng, Y., Qin, X., &amp; Zhao, J. (2013). Neutrophil CD64 expression as a biomarker in the early diagnosis of bacterial infection: A meta-analysis. <em>International Journal of Infectious Diseases</em>, 17(1), e12–e23. <a href="https://doi.org/10.1016/j.ijid.2012.07.017" class="external-link">doi:10.1016/j.ijid.2012.07.017</a></p></li>
+<li><p>de Azambuja, E., Cardoso, F., de Castro, G., Colozza, M., Mano, M. S., Durbecq, V., Sotiriou, C., Larsimont, D., Piccart-Gebhart, M. J., &amp; Paesmans, M. (2007). Ki-67 as prognostic marker in early breast cancer: a meta-analysis of published studies involving 12 155 patients. <em>British Journal of Cancer</em>, 96(10), 1504–1513. <a href="https://doi.org/10.1038/sj.bjc.6603756" class="external-link">doi:10.1038/sj.bjc.6603756</a></p></li>
 </ul>
 </div>
 <div class="section level2">
@@ -252,7 +849,8 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
     <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>GPL (&gt;= 3)</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
 
@@ -260,7 +858,7 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing DiagProMeta</a></li>
+<li><a href="authors.html#citation">Citing DiagProgMeta</a></li>
 </ul>
 </div>
 
@@ -268,7 +866,9 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Zhou Yi <br><small class="roles"> Author, maintainer </small>   </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>Ryota Kinugawa <br><small class="roles"> Author, contributor </small>   </li>
+<li>Kota Nakaike <br><small class="roles"> Author, contributor </small>   </li>
+<li>Yamato Hashimoto <br><small class="roles"> Author, contributor </small>   </li>
 </ul>
 </div>
 
@@ -280,7 +880,7 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Zhou Yi.</p>
+<p>Developed by Zhou Yi, Ryota Kinugawa, Kota Nakaike, Yamato Hashimoto.</p>
 </div>
 
 <div class="pkgdown">

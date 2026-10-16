@@ -1,0 +1,339 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit README.Rmd, then run devtools::build_readme(). -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse  = TRUE,
+  comment   = "#>",
+  fig.path  = "man/figures/README-",
+  fig.width = 8,
+  fig.height = 8
+  # out.width = "450px"
+)
+```
+
+# DiagProMeta
+
+**Meta-analysis of diagnostic and prognostic studies: SROC curves and sensitivity analysis for publication bias**
+
+`DiagProgMeta` is an R package for the meta-analysis of
+
+- **diagnostic test accuracy (DTA) studies**: the summary receiver operating characteristic (SROC) curve and
+  the area under the SROC curve (SAUC) by the bivariate random-effects model (Reitsma et al., 2005), and
+- **prognostic studies**: the time-dependent SROC curve and SAUC, where the time-dependent sensitivity and
+  specificity are reconstructed from the published survival probabilities
+  (Combescure et al., 2016; Hattori and Zhou, 2016),
+
+each with a **likelihood-based sensitivity analysis for publication bias** (Zhou et al., 2023).
+
+|                         | Without publication bias | Sensitivity analysis for publication bias |
+|-------------------------|--------------------------|-------------------------------------------|
+| Diagnostic studies (SROC)              | `reitsma.sroc()`  | `srocsa.t()`    |
+| Prognostic studies (time-dependent SROC) | `hattori.tsroc()` | `tsrocsa.lrt()` |
+
+All four fitting functions come with `print()`, `summary()`, and `plot()` methods.
+
+The repository is named `srocsa`, but the package name is `DiagProMeta`.
+
+## Installation
+
+The development version can be installed from GitHub:
+
+```r
+# install.packages("remotes")
+remotes::install_github("kusuri26/srocsa")
+```
+
+`DiagProMeta` requires R (>= 3.5) and imports `lifecycle`, `mixmeta`, and `numDeriv`.
+
+```{r}
+library(DiagProgMeta)
+```
+
+## Example 1: diagnostic studies (SROC curve)
+
+The `IVD` data (Safdar et al., 2005) contain the 2 x 2 tables (`TP`, `FN`, `FP`, `TN`) of 33 diagnostic studies.
+
+```{r}
+data(IVD)
+head(IVD)
+```
+
+### Without publication bias: `reitsma.sroc()`
+
+```{r}
+fit.sroc <- reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+print(fit.sroc)
+```
+
+`summary()` adds the standard errors and confidence intervals of all the parameters
+and the summary sensitivity, specificity, and SAUC.
+
+```{r}
+summary(fit.sroc)
+```
+
+The SROC curve with its pointwise confidence band, the summary point with its confidence region,
+and the studies (point size proportional to the precision):
+
+```{r sroc-reitsma}
+plot(fit.sroc, plot.ci = TRUE, spoint.region = TRUE,
+     add.study = TRUE, study.size = "precision")
+```
+
+### Sensitivity analysis for publication bias: `srocsa.t()`
+
+The model is fitted for each marginal selection probability $p$ in `sa.p`.
+$p = 1$ corresponds to no publication bias; a smaller $p$ assumes that a smaller proportion of the
+studies is published.
+
+```{r}
+fit.sa <- srocsa.t(TP = TP, FN = FN, TN = TN, FP = FP, data = IVD, sa.p = c(1, 0.8, 0.6))
+print(fit.sa)
+```
+
+```{r}
+## tables of the SAUC and the parameter estimates
+res <- summary(fit.sa)
+res$sauc
+res$coef
+```
+
+```{r sroc-sa}
+## SROC curves and summary points for each p, with the studies
+plot(fit.sa, sroc.cols = c("black", "blue", "red"), add.study = TRUE)
+```
+
+The change of the SROC curve and SAUC as $p$ decreases shows the potential impact of publication bias.
+
+## Example 2: prognostic studies (time-dependent SROC curve)
+
+The `Ki67` data are a list of three data frames:
+
+| Element | Content | Columns used below |
+|---------|---------|--------------------|
+| `Ki67$OS` | Survival probabilities of the test-positive (1) and test-negative (0) groups, one row for each study and each time point | `study`, `t`, `n1`, `n0`, `s1`, `s0` |
+| `Ki67$HR` | Hazard ratio (group 1 vs 0) and its 95% CI, one row for each study | `study`, `HR`, `ci.low`, `ci.up` |
+| `Ki67$MT` | Survival probabilities at the median follow-up time, used to estimate the censoring distribution | `mct_mo`, `n1`, `n0`, `s1_mct`, `s0_mct` |
+
+```{r}
+data(Ki67)
+Ki67_OS <- Ki67$OS
+Ki67_HR <- Ki67$HR
+Ki67_MT <- Ki67$MT
+
+## lnHR and its variance from the HR and its 95% CI
+Ki67_HR$lnHR     <- log(Ki67_HR$HR)
+Ki67_HR$lnHR.var <- ((log(Ki67_HR$ci.up) - log(Ki67_HR$ci.low)) / (2 * qnorm(0.975)))^2
+```
+
+### Without publication bias: `hattori.tsroc()`
+
+The bivariate random-effects model is fitted at each time point in `time.points`.
+
+```{r}
+fit.tsroc <- hattori.tsroc(
+  time.points = c(24, 36, 60),
+  study.os = study, time.os = t, n1.os = n1, n0.os = n0, s1.os = s1, s0.os = s0,
+  data.os = Ki67_OS,
+  study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+  data.lnhr = Ki67_HR,
+  time.med = mct_mo, n1.med = n1, n0.med = n0, s1.med = s1_mct, s0.med = s0_mct,
+  data.mt = Ki67_MT
+)
+
+## one row for each time point
+print(fit.tsroc)
+```
+
+```{r}
+## estimates with SEs and confidence intervals at each time point
+summary(fit.tsroc)
+```
+
+By default, `plot()` draws one plot for each time point; in an interactive session,
+press <kbd>Return</kbd> to move to the next time point. A single time point can be selected by `time`,
+and all the time points can be overlaid in one panel by `overlay = TRUE`.
+
+```{r tsroc-time, eval = FALSE}
+plot(fit.tsroc)                              # one plot per time point
+plot(fit.tsroc, time = 36, add.study = TRUE) # one time point with the studies
+```
+
+```{r tsroc-overlay}
+plot(fit.tsroc, overlay = TRUE)              # all the time points in one panel
+```
+
+### Sensitivity analysis for publication bias: `tsrocsa.lrt()`
+
+The selection function is on the $t$-statistic of lnHR.
+The model is fitted for each time point in `time.points` and each $p$ in `senp.p`.
+
+```{r}
+fit.tsa <- tsrocsa.lrt(
+  time.points = c(36, 60),
+  study.os = study, time.os = t, n1.os = n1, n0.os = n0, s1.os = s1, s0.os = s0,
+  data.os = Ki67_OS,
+  study.lnhr = study, lnhr = lnHR, var.lnHR = lnHR.var,
+  data.lnhr = Ki67_HR,
+  time.med = mct_mo, n1.med = n1, n0.med = n0, s1.med = s1_mct, s0.med = s0_mct,
+  data.mt = Ki67_MT,
+  senp.p = c(1, 0.8)
+)
+print(fit.tsa)
+```
+
+```{r}
+summary(fit.tsa)
+```
+
+One plot for each time point (curves for each $p$), or all in one panel
+(color: time point, line type: $p$):
+
+```{r tsrocsa-time}
+plot(fit.tsa, time = 60, add.study = TRUE)
+```
+
+```{r tsrocsa-overlay}
+plot(fit.tsa, overlay = TRUE)
+```
+
+## Methods
+
+### SROC curve (`reitsma.sroc`)
+
+Let $y_{1i}$ and $y_{2i}$ be the logit-transformed sensitivity and specificity of study $i$,
+and $v_{1i}$ and $v_{2i}$ be their variances.
+The bivariate random-effects model (Reitsma et al., 2005) is
+
+$$
+(y_{1i}, y_{2i})^\top \sim N\left((\mu_1, \mu_2)^\top,\ \mathrm{diag}(v_{1i}, v_{2i}) + \Omega\right),
+$$
+
+where $\Omega$ has the between-study standard deviations $\tau_1, \tau_2$ and correlation $\rho$.
+The SROC curve is
+
+$$
+\mathrm{logit}(\mathrm{TPR}) = \mu_1 - \frac{\tau_1 \rho}{\tau_2}\left\{\mathrm{logit}(\mathrm{FPR}) + \mu_2\right\},
+$$
+
+and the SAUC is the area under it.
+The confidence interval of the SAUC is calculated by the delta method on the logit scale.
+
+### Sensitivity analysis on the SROC curve (`srocsa.t`)
+
+The probability of publishing study $i$ is modeled by the selection function $\Phi(\alpha + \beta t_i)$ with
+
+$$
+t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad c_1, c_2 \ge 0, \quad c_1^2 + c_2^2 = 1.
+$$
+
+For a given marginal selection probability $p$, $\alpha$ is determined such that the mean of the inverse of the
+marginal selection probabilities of the observed studies equals $1/p$.
+The model is fitted by the maximum likelihood method for each $p$ in `sa.p`.
+$c_1^2$ is estimated by default, or fixed by the argument `c11`.
+
+### Time-dependent SROC curve (`hattori.tsroc`)
+
+At each time point $t$, the time-dependent sensitivity and specificity are reconstructed from the survival
+probabilities $S_1(t)$ and $S_0(t)$ of the test-positive and test-negative groups (Combescure et al., 2016):
+
+$$
+\mathrm{Se}(t) = \frac{\{1 - S_1(t)\} q_1}{\{1 - S_1(t)\} q_1 + \{1 - S_0(t)\} q_0}, \qquad
+\mathrm{Sp}(t) = \frac{S_0(t) q_0}{S_1(t) q_1 + S_0(t) q_0},
+$$
+
+where $q_1$ and $q_0$ are the proportions of the two groups.
+Their within-study variances and covariance are calculated from the survival probabilities up to $t$,
+assuming a censoring distribution common to all the studies, estimated from the median follow-up time.
+The bivariate random-effects model (with the within-study covariance) is fitted at each time point
+(Hattori and Zhou, 2016).
+
+### Sensitivity analysis on the time-dependent SROC curve (`tsrocsa.lrt`)
+
+The logit-transformed sensitivity, specificity, and the log hazard ratio (lnHR) are modeled by the
+trivariate random-effects model, combined with the selection function on the $t$-statistic of lnHR.
+The time-dependent SROC curve and SAUC are calculated from the parameters of the
+logit-transformed sensitivity and specificity.
+
+Three data frames are required by `hattori.tsroc()` and `tsrocsa.lrt()`:
+
+| Argument    | Content                                                                                      |
+|-------------|----------------------------------------------------------------------------------------------|
+| `data.os`   | Survival probabilities of the two groups, one row for each study and each time point (sorted by time within each study) |
+| `data.lnhr` | lnHR and its variance, one row for each study                                                |
+| `data.mt`   | Survival probabilities at the median follow-up time, used to estimate the censoring distribution |
+
+See `?tsrocsa.lrt` for the details of each column.
+
+## Functions
+
+| Function | Description |
+|----------|-------------|
+| `reitsma.sroc()` | Bivariate random-effects model for the SROC curve and SAUC, without publication bias |
+| `srocsa.t()` | Sensitivity analysis for publication bias on the SROC curve and SAUC |
+| `hattori.tsroc()` | Time-dependent SROC curve and SAUC, without publication bias |
+| `tsrocsa.lrt()` | Sensitivity analysis for publication bias on the time-dependent SROC curve and SAUC |
+| `sauc()` | SAUC and its confidence interval (delta method on the logit scale) |
+
+### Methods
+
+| Method | `"sroc"` objects (`reitsma.sroc()`, `hattori.tsroc()`) | `"srocsa"` objects (`srocsa.t()`, `tsrocsa.lrt()`) |
+|--------|-----------------------------------|---------------------------------|
+| `print()` | Number of studies, convergence, SAUC, sensitivity, specificity (with CIs), and the parameter estimates; one row for each time point | SAUC and parameter estimates for each $p$ (and each time point) |
+| `summary()` | Estimates, SEs, and CIs of $(\mu_1, \mu_2, \tau_1, \tau_2, \rho)$, log-likelihood, and all estimates | Tables of the SAUC (`$sauc`) and the parameter estimates (`$coef`) |
+| `plot()` | SROC curve(s); options `time`, `overlay`, `plot.ci`, `spoint.region`, `add.study` | SROC curves for each $p$; options `time`, `p`, `overlay`, `plot.ci`, `spoint.region`, `add.study` |
+
+## Data
+
+| Data | Description |
+|------|-------------|
+| `IVD` | Meta-analysis of the diagnosis of intravascular device-related bloodstream infection (33 studies) |
+| `CD64` | Meta-analysis of neutrophil CD64 for the diagnosis of bacterial infection (27 studies) |
+| `IVD_2`, `CD64_2` | Logit-transformed sensitivity and specificity of `IVD` and `CD64`, with their variances |
+| `Ki67` | Meta-analysis of Ki67 as a prognostic marker: a list of the survival data (`OS`), hazard ratios (`HR`), and median follow-up times (`MT`) |
+
+## References
+
+- Methods
+
+- Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005).
+  Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
+  *Journal of Clinical Epidemiology*, 58(10), 982–990.
+  [doi:10.1016/j.jclinepi.2005.02.022](https://doi.org/10.1016/j.jclinepi.2005.02.022)
+- Zhou Y, Huang A, Hattori S (2023).
+  A likelihood-based sensitivity analysis for publication bias on the summary receiver operating characteristic
+  in meta-analysis of diagnostic test accuracy.
+  *Statistics in Medicine*, 42(6), 781–798.
+  [doi:10.1002/sim.9643](https://doi.org/10.1002/sim.9643)
+- Hattori S, Zhou XH (2016).
+  Time-dependent summary receiver operating characteristics for meta-analysis of prognostic studies.
+  *Statistics in Medicine*, 35(26), 4746–4763.
+  [doi:10.1002/sim.7029](https://doi.org/10.1002/sim.7029)
+- Zhou, Y., Huang, A., & Hattori, S. (2025). 
+  Sensitivity analysis for reporting bias on the time-dependent summary receiver operating 
+  characteristics curve in meta-analysis of prognosis studies with time-to-event outcomes. 
+  *Research Synthesis Methods*, 16(3), 528–549. 
+  [doi:10.1017/rsm.2025.14](https://doi.org/10.1017/rsm.2025.14)
+  
+- Data
+
+- Safdar N, Fine JP, Maki DG (2005).
+  Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection.
+  *Annals of Internal Medicine*, 142(6), 451–466.
+  [doi:10.7326/0003-4819-142-6-200503150-00011](https://doi.org/10.7326/0003-4819-142-6-200503150-00011)
+- Li, S., Huang, X., Chen, Z., Zhong, H., Peng, Q., Deng, Y., Qin, X., & Zhao, J. (2013). 
+  Neutrophil CD64 expression as a biomarker in the early diagnosis of bacterial infection: A meta-analysis. 
+  *International Journal of Infectious Diseases*, 17(1), e12–e23. 
+  [doi:10.1016/j.ijid.2012.07.017](https://doi.org/10.1016/j.ijid.2012.07.017)
+- de Azambuja, E., Cardoso, F., de Castro, G., Colozza, M., Mano, M. S., Durbecq, V., Sotiriou, C., Larsimont, D., Piccart-Gebhart, M. J., & Paesmans, M. (2007). 
+  Ki-67 as prognostic marker in early breast cancer: a meta-analysis of published studies involving 12 155 patients. 
+  *British Journal of Cancer*, 96(10), 1504–1513. 
+  [doi:10.1038/sj.bjc.6603756](https://doi.org/10.1038/sj.bjc.6603756)
+
+## License
+
+GPL (>= 3)

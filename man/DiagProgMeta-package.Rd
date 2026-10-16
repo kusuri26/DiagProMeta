@@ -40,10 +40,6 @@ Example data:
 Authors:
 \itemize{
   \item Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
-}
-
-Other contributors:
-\itemize{
   \item Ryota Kinugawa [contributor]
   \item Kota Nakaike [contributor]
   \item Yamato Hashimoto [contributor]

@@ -185,7 +185,7 @@ summary(fit)
 ## plots
 plot(fit, ask = FALSE)                       # all time points, one per page, no prompt
 plot(fit, time = 36, add.study = TRUE)       # one time point with the studies
-plot(fit)                    # all time points in one panel
+plot(fit, overlay = TRUE)                    # all time points in one panel
 
 \donttest{
 ## interactive: press <Return> to move to the next time point
