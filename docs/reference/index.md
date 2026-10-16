@@ -6,8 +6,9 @@
   CD64 data
 - [`DiagProgMeta`](reference/DiagProgMeta-package.md)
   [`DiagProgMeta-package`](reference/DiagProgMeta-package.md) :
-  Meta-analysis of diagnostic or prognostic studies with sensitivity
-  analyses on the SROC Curve anf the tim-dependent SROC curve
+  Meta-Analysis of Diagnostic and Prognostic Studies with Sensitivity
+  Analysis for Publication Bias on the SROC and Time-Dependent SROC
+  Curves
 - [`hattori.tsroc()`](reference/hattori.tsroc.md) : Bivariate
   random-effects model (Hattori's model) estimating the time-dependent
   SROC curve without publication bias

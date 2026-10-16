@@ -39,8 +39,7 @@ sensitivity analysis for publication bias**
   2005), and
 - **prognostic studies**: the time-dependent SROC curve and SAUC, where
   the time-dependent sensitivity and specificity are reconstructed from
-  the published survival probabilities (Combescure et al., 2016; Hattori
-  and Zhou, 2016),
+  the published survival probabilities (Hattori and Zhou, 2016),
 
 each with a **likelihood-based sensitivity analysis for publication
 bias** (Zhou et al., 2023).
@@ -66,6 +65,14 @@ The development version can be installed from GitHub:
 
 # install.packages("remotes")
 remotes::install_github("kusuri26/srocsa")
+```
+
+Alternatively,
+
+``` r
+
+# install.packages("pak")
+pak::pak("kusuri26/srocsa")
 ```
 
 `DiagProgMeta` requires R (\>= 3.5) and imports `lifecycle`, `mixmeta`,
