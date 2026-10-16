@@ -1,4 +1,32 @@
 
+- [DiagProMeta](#diagprometa)
+  - [Installation](#installation)
+  - [Example 1: diagnostic studies (SROC
+    curve)](#example-1-diagnostic-studies-sroc-curve)
+    - [Without publication bias:
+      `reitsma.sroc()`](#without-publication-bias-reitsmasroc)
+    - [Sensitivity analysis for publication bias:
+      `srocsa.t()`](#sensitivity-analysis-for-publication-bias-srocsat)
+  - [Example 2: prognostic studies (time-dependent SROC
+    curve)](#example-2-prognostic-studies-time-dependent-sroc-curve)
+    - [Without publication bias:
+      `hattori.tsroc()`](#without-publication-bias-hattoritsroc)
+    - [Sensitivity analysis for publication bias:
+      `tsrocsa.lrt()`](#sensitivity-analysis-for-publication-bias-tsrocsalrt)
+  - [Methods](#methods)
+    - [SROC curve (`reitsma.sroc`)](#sroc-curve-reitsmasroc)
+    - [Sensitivity analysis on the SROC curve
+      (`srocsa.t`)](#sensitivity-analysis-on-the-sroc-curve-srocsat)
+    - [Time-dependent SROC curve
+      (`hattori.tsroc`)](#time-dependent-sroc-curve-hattoritsroc)
+    - [Sensitivity analysis on the time-dependent SROC curve
+      (`tsrocsa.lrt`)](#sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt)
+  - [Functions](#functions)
+    - [Methods](#methods-1)
+  - [Data](#data)
+  - [References](#references)
+  - [License](#license)
+
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd, then run devtools::build_readme(). -->
 
 # DiagProMeta
@@ -128,7 +156,7 @@ plot(fit.sroc, plot.ci = TRUE, spoint.region = TRUE,
      add.study = TRUE, study.size = "precision")
 ```
 
-![](man/figures/README-sroc-reitsma-1.png)<!-- -->
+<img src="man/figures/README-sroc-reitsma-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ### Sensitivity analysis for publication bias: `srocsa.t()`
 
@@ -249,7 +277,7 @@ res$coef
 plot(fit.sa, sroc.cols = c("black", "blue", "red"), add.study = TRUE)
 ```
 
-![](man/figures/README-sroc-sa-1.png)<!-- -->
+<img src="man/figures/README-sroc-sa-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 The change of the SROC curve and SAUC as $p$ decreases shows the
 potential impact of publication bias.
@@ -420,7 +448,7 @@ plot(fit.tsroc, time = 36, add.study = TRUE) # one time point with the studies
 plot(fit.tsroc, overlay = TRUE)              # all the time points in one panel
 ```
 
-![](man/figures/README-tsroc-overlay-1.png)<!-- -->
+<img src="man/figures/README-tsroc-overlay-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ### Sensitivity analysis for publication bias: `tsrocsa.lrt()`
 
@@ -594,13 +622,13 @@ One plot for each time point (curves for each $p$), or all in one panel
 plot(fit.tsa, time = 60, add.study = TRUE)
 ```
 
-![](man/figures/README-tsrocsa-time-1.png)<!-- -->
+<img src="man/figures/README-tsrocsa-time-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ``` r
 plot(fit.tsa, overlay = TRUE)
 ```
 
-![](man/figures/README-tsrocsa-overlay-1.png)<!-- -->
+<img src="man/figures/README-tsrocsa-overlay-1.png" alt="" width="100%" style="display: block; margin: auto;" />
 
 ## Methods
 

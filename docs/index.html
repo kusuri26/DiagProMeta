@@ -4,61 +4,88 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias • DiagProgMeta</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias">
+<meta name="description" content="Provides methods for meta-analysis of diagnostic test accuracy and prognostic studies. The package estimates the summary receiver operating characteristic (SROC) curve for diagnostic test accuracy and the time-dependent SROC curve for prognostic studies. It also provides likelihood-based sensitivity analyses to assess the potential impact of publication bias on these curves.">
 <meta property="og:description" content="Provides methods for meta-analysis of diagnostic test accuracy and prognostic studies. The package estimates the summary receiver operating characteristic (SROC) curve for diagnostic test accuracy and the time-dependent SROC curve for prognostic studies. It also provides likelihood-based sensitivity analyses to assess the potential impact of publication bias on these curves.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">DiagProgMeta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
+    <a class="navbar-brand me-2" href="index.html">DiagProgMeta</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+      </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><ul>
+<li>
+<a href="#diagprometa">DiagProMeta</a>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li>
+<a href="#example-1-diagnostic-studies-sroc-curve">Example 1: diagnostic studies (SROC curve)</a>
+<ul>
+<li><a href="#without-publication-bias-reitsmasroc">Without publication bias: <code>reitsma.sroc()</code></a></li>
+<li><a href="#sensitivity-analysis-for-publication-bias-srocsat">Sensitivity analysis for publication bias: <code>srocsa.t()</code></a></li>
+</ul>
+</li>
+<li>
+<a href="#example-2-prognostic-studies-time-dependent-sroc-curve">Example 2: prognostic studies (time-dependent SROC curve)</a>
+<ul>
+<li><a href="#without-publication-bias-hattoritsroc">Without publication bias: <code>hattori.tsroc()</code></a></li>
+<li><a href="#sensitivity-analysis-for-publication-bias-tsrocsalrt">Sensitivity analysis for publication bias: <code>tsrocsa.lrt()</code></a></li>
+</ul>
+</li>
+<li>
+<a href="#methods">Methods</a>
+<ul>
+<li><a href="#sroc-curve-reitsmasroc">SROC curve (<code>reitsma.sroc</code>)</a></li>
+<li><a href="#sensitivity-analysis-on-the-sroc-curve-srocsat">Sensitivity analysis on the SROC curve (<code>srocsa.t</code>)</a></li>
+<li><a href="#time-dependent-sroc-curve-hattoritsroc">Time-dependent SROC curve (<code>hattori.tsroc</code>)</a></li>
+<li><a href="#sensitivity-analysis-on-the-time-dependent-sroc-curve-tsrocsalrt">Sensitivity analysis on the time-dependent SROC curve (<code>tsrocsa.lrt</code>)</a></li>
+</ul>
+</li>
+<li>
+<a href="#functions">Functions</a>
+<ul>
+<li><a href="#methods-1">Methods</a></li>
+</ul>
+</li>
+<li><a href="#data">Data</a></li>
+<li><a href="#references">References</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<!-- README.md is generated from README.Rmd. Please edit README.Rmd, then run devtools::build_readme(). --><div class="section level1">
 <div class="page-header"><h1 id="diagprometa">DiagProMeta<a class="anchor" aria-label="anchor" href="#diagprometa"></a>
 </h1></div>
 <p><strong>Meta-analysis of diagnostic and prognostic studies: SROC curves and sensitivity analysis for publication bias</strong></p>
@@ -105,7 +132,7 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kusuri26/srocsa"</span><span class="op">)</span></span></code></pre></div>
 <p><code>DiagProMeta</code> requires R (&gt;= 3.5) and imports <code>lifecycle</code>, <code>mixmeta</code>, and <code>numDeriv</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DiagProgMeta</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://https://kusuri26.github.io/DiagProMeta/">DiagProgMeta</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-1-diagnostic-studies-sroc-curve">Example 1: diagnostic studies (SROC curve)<a class="anchor" aria-label="anchor" href="#example-1-diagnostic-studies-sroc-curve"></a>
@@ -177,7 +204,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.sroc</span>, plot.ci <span class="op">=</span> <span class="cn">TRUE</span>, spoint.region <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>     add.study <span class="op">=</span> <span class="cn">TRUE</span>, study.size <span class="op">=</span> <span class="st">"precision"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-sroc-reitsma-1.png"><!-- --></p>
+<p><img src="reference/figures/README-sroc-reitsma-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="sensitivity-analysis-for-publication-bias-srocsat">Sensitivity analysis for publication bias: <code>srocsa.t()</code>
@@ -291,7 +318,7 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## SROC curves and summary points for each p, with the studies</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.sa</span>, sroc.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-sroc-sa-1.png"><!-- --></p>
+<p><img src="reference/figures/README-sroc-sa-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 <p>The change of the SROC curve and SAUC as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> decreases shows the potential impact of publication bias.</p>
 </div>
 </div>
@@ -476,7 +503,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsroc</span>, time <span class="op">=</span> <span class="fl">36</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># one time point with the studies</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsroc</span>, overlay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>              <span class="co"># all the time points in one panel</span></span></code></pre></div>
-<p><img src="reference/figures/README-tsroc-overlay-1.png"><!-- --></p>
+<p><img src="reference/figures/README-tsroc-overlay-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="sensitivity-analysis-for-publication-bias-tsrocsalrt">Sensitivity analysis for publication bias: <code>tsrocsa.lrt()</code>
@@ -642,10 +669,10 @@
 <p>One plot for each time point (curves for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>), or all in one panel (color: time point, line type: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>):</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsa</span>, time <span class="op">=</span> <span class="fl">60</span>, add.study <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-tsrocsa-time-1.png"><!-- --></p>
+<p><img src="reference/figures/README-tsrocsa-time-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.tsa</span>, overlay <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-tsrocsa-overlay-1.png"><!-- --></p>
+<p><img src="reference/figures/README-tsrocsa-overlay-1.png" alt="" width="100%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -843,10 +870,15 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 <p>GPL (&gt;= 3)</p>
 </div>
 </div>
-  </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://https://kusuri26.github.io/DiagProMeta/issues">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -874,23 +906,20 @@ t_i = \frac{c_1 y_{1i} + c_2 y_{2i}}{\sqrt{c_1^2 v_{1i} + c_2^2 v_{2i}}}, \quad 
 
 
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Zhou Yi, Ryota Kinugawa, Kota Nakaike, Yamato Hashimoto.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Zhou Yi, Ryota Kinugawa, Kota Nakaike, Yamato Hashimoto.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 

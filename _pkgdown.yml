@@ -1,0 +1,11 @@
+url: https://https://kusuri26.github.io/DiagProMeta/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+# navbar:
+#   components:
+#     cran:
+#       icon: fas fa-download
+      # text: "CRAN downloads"
+      # href: https://cran.r-project.org/package=tteICE

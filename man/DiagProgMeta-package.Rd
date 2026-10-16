@@ -34,6 +34,14 @@ Example data:
   \item \code{\link{IVD}}, \code{\link{CD64}} Meta-analyses of diagnostic studies.
 }
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://https://kusuri26.github.io/DiagProMeta/}
+  \item Report bugs at \url{https://https://kusuri26.github.io/DiagProMeta/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Zhou Yi \email{zhouy@people.kobe-u.ac.jp}
 
