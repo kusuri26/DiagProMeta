@@ -1,6 +1,6 @@
-# DiagProMeta
+# DiagProgMeta
 
-- [DiagProMeta](#diagprometa)
+- [DiagProgMeta](#diagprogmeta)
   - [Installation](#installation)
   - [Example 1: diagnostic studies (SROC
     curve)](#example-1-diagnostic-studies-sroc-curve)
@@ -55,7 +55,8 @@ All four fitting functions come with
 [`summary()`](https://rdrr.io/r/base/summary.html), and
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) methods.
 
-The repository is named `srocsa`, but the package name is `DiagProMeta`.
+The repository is named `srocsa`, but the package name is
+`DiagProgMeta`.
 
 ## Installation
 
@@ -67,7 +68,7 @@ The development version can be installed from GitHub:
 remotes::install_github("kusuri26/srocsa")
 ```
 
-`DiagProMeta` requires R (\>= 3.5) and imports `lifecycle`, `mixmeta`,
+`DiagProgMeta` requires R (\>= 3.5) and imports `lifecycle`, `mixmeta`,
 and `numDeriv`.
 
 ``` r

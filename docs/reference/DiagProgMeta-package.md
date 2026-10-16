@@ -48,9 +48,10 @@ Example data:
 
 Useful links:
 
-- <https://https://kusuri26.github.io/DiagProMeta/>
+- <https://https://kusuri26.github.io/DiagProgMeta/>
 
-- Report bugs at <https://https://kusuri26.github.io/DiagProMeta/issues>
+- Report bugs at
+  <https://https://kusuri26.github.io/DiagProgMeta/issues>
 
 ## Author
 

@@ -1,5 +1,5 @@
 
-- [DiagProMeta](#diagprometa)
+- [DiagProgMeta](#diagprogmeta)
   - [Installation](#installation)
   - [Example 1: diagnostic studies (SROC
     curve)](#example-1-diagnostic-studies-sroc-curve)
@@ -29,7 +29,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd, then run devtools::build_readme(). -->
 
-# DiagProMeta
+# DiagProgMeta
 
 **Meta-analysis of diagnostic and prognostic studies: SROC curves and
 sensitivity analysis for publication bias**
@@ -56,7 +56,8 @@ bias** (Zhou et al., 2023).
 All four fitting functions come with `print()`, `summary()`, and
 `plot()` methods.
 
-The repository is named `srocsa`, but the package name is `DiagProMeta`.
+The repository is named `srocsa`, but the package name is
+`DiagProgMeta`.
 
 ## Installation
 
@@ -67,7 +68,7 @@ The development version can be installed from GitHub:
 remotes::install_github("kusuri26/srocsa")
 ```
 
-`DiagProMeta` requires R (\>= 3.5) and imports `lifecycle`, `mixmeta`,
+`DiagProgMeta` requires R (\>= 3.5) and imports `lifecycle`, `mixmeta`,
 and `numDeriv`.
 
 ``` r

@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# DiagProMeta
+# DiagProgMeta
 
 **Meta-analysis of diagnostic and prognostic studies: SROC curves and sensitivity analysis for publication bias**
 
@@ -43,7 +43,7 @@ each with a **likelihood-based sensitivity analysis for publication bias** (Zhou
 
 All four fitting functions come with `print()`, `summary()`, and `plot()` methods.
 
-The repository is named `srocsa`, but the package name is `DiagProMeta`.
+The repository is named `srocsa`, but the package name is `DiagProgMeta`.
 
 ## Installation
 
@@ -54,7 +54,7 @@ The development version can be installed from GitHub:
 remotes::install_github("kusuri26/srocsa")
 ```
 
-`DiagProMeta` requires R (>= 3.5) and imports `lifecycle`, `mixmeta`, and `numDeriv`.
+`DiagProgMeta` requires R (>= 3.5) and imports `lifecycle`, `mixmeta`, and `numDeriv`.
 
 ```{r}
 library(DiagProgMeta)
