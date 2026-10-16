@@ -79,8 +79,9 @@ in meta-analysis of prognosis studies with time-to-event outcomes.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://https://kusuri26.github.io/DiagProgMeta}
-  \item Report bugs at \url{https://https://kusuri26.github.io/DiagProgMeta/issues}
+  \item \url{https://kusuri26.github.io/DiagProgMeta/}
+  \item \url{https://github.com/kusuri26/DiagProgMeta/}
+  \item Report bugs at \url{https://github.com/kusuri26/DiagProgMeta/issues}
 }
 
 }

@@ -13,15 +13,18 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/kusuri26/DiagProgMeta/blob/HEAD/DESCRIPTION)
+
 Kinugawa R, Nakaike K, Hashimoto Y, Zhou Y (2026). *DiagProgMeta:
 Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with
 Sensitivity Analysis for Publication Bias*. R package version 0.1.0,
-<https://https://kusuri26.github.io/DiagProgMeta>.
+<https://kusuri26.github.io/DiagProgMeta/>.
 
     @Manual{,
       title = {DiagProgMeta: Meta-Analysis of Diagnostic Test Accuracy and Prognostic Capacity with Sensitivity Analysis for Publication Bias},
       author = {Ryota Kinugawa and Kota Nakaike and Yamato Hashimoto and Yi Zhou},
       year = {2026},
       note = {R package version 0.1.0},
-      url = {https://https://kusuri26.github.io/DiagProgMeta},
+      url = {https://kusuri26.github.io/DiagProgMeta/},
     }

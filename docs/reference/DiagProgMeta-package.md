@@ -89,10 +89,11 @@ curve in meta-analysis of prognosis studies with time-to-event outcomes.
 
 Useful links:
 
-- <https://https://kusuri26.github.io/DiagProgMeta>
+- <https://kusuri26.github.io/DiagProgMeta/>
 
-- Report bugs at
-  <https://https://kusuri26.github.io/DiagProgMeta/issues>
+- <https://github.com/kusuri26/DiagProgMeta/>
+
+- Report bugs at <https://github.com/kusuri26/DiagProgMeta/issues>
 
 ## Author
 

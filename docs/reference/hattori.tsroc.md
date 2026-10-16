@@ -187,7 +187,7 @@ of this function.
 Hattori, S., & Zhou, X.-H. (2016). Time-dependent summary receiver
 operating characteristics for meta-analysis of prognostic studies.
 *Statistics in Medicine*, 35(26), 4746–4763.
-[doi:doi.org/10.1002/sim.7029](https://doi.org/doi.org/10.1002/sim.7029)
+[doi:10.1002/sim.7029](https://doi.org/10.1002/sim.7029)
 
 ## See also
 
