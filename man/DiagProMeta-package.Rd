@@ -33,7 +33,6 @@ Results output functions:
 Example data:
 \itemize{
   \item \code{\link{IVD}}, \code{\link{CD64}} Meta-analyses of diagnostic studies.
-  \item \code{\link{IVD_2}}, \code{\link{CD64_2}} Logit-transformed data of \code{IVD} and \code{CD64}.
 }
 }
 \author{

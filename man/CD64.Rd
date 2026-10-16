@@ -3,30 +3,40 @@
 \docType{data}
 \name{CD64}
 \alias{CD64}
-\title{Real meta-analysis of diagnostic studies: CD64 data}
+\title{Meta-analysis of diagnostic studies: CD64 data}
 \format{
 A data frame with 27 rows (studies) and 11 variables:
 \describe{
-  \item{study}{study ID}
-  \item{Author}{authors of studies}
-  \item{TP}{True positive}
-  \item{FN}{False negative}
-  \item{FP}{False positive}
-  \item{TN}{True negative}
-  \item{cutoff}{Cutoff values}
-  \item{unit}{Unit of cutoff}
-  \item{unit.grp}{Unit group}
-  \item{cutoff.grp}{Cutoff group}
-  \item{subgroup}{Subgroup}
+  \item{study}{Study identifier.}
+  \item{Author}{Author or authors of the study.}
+  \item{TP}{Number of true positive cases.}
+  \item{FN}{Number of false negative cases.}
+  \item{FP}{Number of false positive cases.}
+  \item{TN}{Number of true negative cases.}
+  \item{cutoff}{Diagnostic cutoff value used in the study.}
+  \item{unit}{Measurement unit of the cutoff value.}
+  \item{unit.grp}{Measurement-unit group used in the study.}
+  \item{cutoff.grp}{Cutoff-value group used in the study.}
+  \item{subgroup}{Subgroup of the study used for analysis.}
 }
 }
 \source{
-\url{https://pubmed.ncbi.nlm.nih.gov/22940278/}
+Li S, Huang X, Chen Z, Zhong H, Peng Q, Deng Y, Qin X, Zhao J (2013).
+Neutrophil CD64 expression as a biomarker in the early diagnosis of
+bacterial infection: A meta-analysis.
+\emph{International Journal of Infectious Diseases}, 17(1), e12--e23.
+\doi{10.1016/j.ijid.2012.07.017}
 }
 \usage{
 CD64
 }
 \description{
-{``To comprehensively and quantitatively summarize the accuracy of neutrophil CD64 in the early diagnosis of bacterial infection.''}
+A dataset from a meta-analysis of diagnostic studies evaluating neutrophil
+CD64 expression for the early diagnosis of bacterial infection.
+The dataset contains study-level 2 x 2 diagnostic accuracy data together
+with information on cutoff values, measurement units, and subgroups.
+}
+\examples{
+data(CD64)
 }
 \keyword{datasets}

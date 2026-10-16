@@ -10,22 +10,28 @@ export(srocsa.t)
 export(tsroc)
 export(tsrocsa.lrt)
 importFrom(grDevices,gray.colors)
-importFrom(graphics,curve)
-importFrom(graphics,legend)
-importFrom(graphics,points)
-importFrom(graphics,title)
+importFrom(graphics,
+  curve,
+  legend,
+  points,
+  title
+)
 importFrom(lifecycle,deprecated)
 importFrom(mixmeta,mixmeta)
-importFrom(stats,complete.cases)
-importFrom(stats,integrate)
-importFrom(stats,na.omit)
-importFrom(stats,nlminb)
-importFrom(stats,plogis)
-importFrom(stats,pnorm)
-importFrom(stats,qlogis)
-importFrom(stats,qnorm)
-importFrom(stats,setNames)
-importFrom(stats,uniroot)
-importFrom(utils,head)
-importFrom(utils,modifyList)
-importFrom(utils,tail)
+importFrom(stats,
+  complete.cases,
+  integrate,
+  na.omit,
+  nlminb,
+  plogis,
+  pnorm,
+  qlogis,
+  qnorm,
+  setNames,
+  uniroot
+)
+importFrom(utils,
+  head,
+  modifyList,
+  tail
+)

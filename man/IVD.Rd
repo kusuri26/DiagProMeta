@@ -3,23 +3,24 @@
 \docType{data}
 \name{IVD}
 \alias{IVD}
-\title{Real meta-analysis of diagnostic studies: IVD data with number of subjects}
+\title{Meta-analysis of diagnostic studies: IVD data}
 \format{
 A data frame with 33 rows (studies) and 8 variables:
 \describe{
-  \item{study}{study ID}
-  \item{TP}{True positive}
-  \item{FN}{False negative}
-  \item{FP}{False positive}
-  \item{TN}{True negative}
-  \item{cutoff.grp}{Cutoff value by group}
-  \item{type}{Diagnostic type}
-  \item{cutoff}{Cutoff information}
+  \item{study}{Study identifier.}
+  \item{TP}{Number of true positive cases.}
+  \item{FN}{Number of false negative cases.}
+  \item{FP}{Number of false positive cases.}
+  \item{TN}{Number of true negative cases.}
+  \item{cutoff.grp}{Cutoff-value group used in the study.}
+  \item{type}{Type of diagnostic method or test.}
+  \item{cutoff}{Diagnostic cutoff value or cutoff information.}
 }
 }
 \source{
 Safdar N, Fine JP, Maki DG (2005).
-Meta-analysis: methods for diagnosing intravascular device-related bloodstream infection.
+Meta-analysis: methods for diagnosing intravascular device-related
+bloodstream infection.
 \emph{Annals of Internal Medicine}, 142(6), 451--466.
 \doi{10.7326/0003-4819-142-6-200503150-00011}
 }
@@ -27,6 +28,12 @@ Meta-analysis: methods for diagnosing intravascular device-related bloodstream i
 IVD
 }
 \description{
-{``To identify the most accurate methods for diagnosis of IVD-related bloodstream infection.''}
+A dataset from a meta-analysis of diagnostic studies evaluating methods
+for diagnosing intravascular device-related bloodstream infection (IVD-BSI).
+The dataset contains study-level 2 x 2 diagnostic accuracy data together
+with information on diagnostic type and cutoff values.
+}
+\examples{
+data(IVD)
 }
 \keyword{datasets}
