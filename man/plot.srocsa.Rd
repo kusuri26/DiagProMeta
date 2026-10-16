@@ -2,12 +2,13 @@
 % Please edit documentation in R/plot.srocsa.R
 \name{plot.srocsa}
 \alias{plot.srocsa}
-\title{Plot the sensitivitya analysis of the SROC curves}
+\title{Plot the sensitivity analysis of the SROC curves}
 \usage{
 \method{plot}{srocsa}(
   x,
   time = NULL,
   p = NULL,
+  overlay = FALSE,
   ask = NULL,
   sroc.cols = NULL,
   sroc.lty = 1,
@@ -24,7 +25,7 @@
   study.size = c("fixed", "precision"),
   study.pch = 1,
   study.cex = 1,
-  study.col = "grey55",
+  study.col = NULL,
   add.sauc = TRUE,
   legend.pos = "bottomright",
   legend.cex = 0.85,
@@ -44,13 +45,19 @@ If \code{time = NULL} (default), all the time points are plotted.}
 \item{p}{Values of the marginal selection probability \eqn{p} to plot.
 If \code{p = NULL} (default), all the values are plotted.}
 
+\item{overlay}{Logical; if \code{TRUE}, all the selected time points of \code{\link{tsrocsa.lrt}}
+are drawn in one panel (ignored for \code{\link{srocsa.t}}, which has one panel).}
+
 \item{ask}{Logical; whether to wait for <Return> before each new time point.
 Default \code{NULL} means \code{TRUE} when more than one plot is drawn on an interactive device.}
 
-\item{sroc.cols}{Colors of the SROC curves, one for each \eqn{p}.
-Default uses grey colors (black for the first \eqn{p}).}
+\item{sroc.cols}{Colors of the SROC curves: one for each \eqn{p},
+or one for each time point when \code{overlay = TRUE}.
+Default uses grey colors (black for the first \eqn{p}), and
+\code{\link[grDevices]{hcl.colors}} (palette \code{"Dark 3"}) for the time points when \code{overlay = TRUE}.}
 
-\item{sroc.lty}{Line types of the SROC curves, recycled over \eqn{p}.}
+\item{sroc.lty}{Line types of the SROC curves, recycled over \eqn{p}.
+When \code{overlay = TRUE} and it is not specified, \code{1, 2, 3, ...} are used for the values of \eqn{p}.}
 
 \item{sroc.lwd}{Line width of the SROC curves.}
 
@@ -76,7 +83,10 @@ stored in the attribute \code{"data"} of \code{x}.}
 \item{study.size}{Size of the study points: \code{"fixed"} (default) or \code{"precision"},
 proportional to \eqn{1/\sqrt{v_1 + v_2}}{1/sqrt(v1 + v2)} relative to its mean.}
 
-\item{study.pch, study.cex, study.col}{Symbol, (base) size, and color of the study points.}
+\item{study.pch, study.cex}{Symbol and (base) size of the study points.}
+
+\item{study.col}{Color of the study points. Default \code{NULL} uses grey,
+or the (semi-transparent) color of each time point when \code{overlay = TRUE}.}
 
 \item{add.sauc}{Whether to show the SAUC (and its CI) for each \eqn{p} in the legend.}
 
@@ -86,7 +96,8 @@ proportional to \eqn{1/\sqrt{v_1 + v_2}}{1/sqrt(v1 + v2)} relative to its mean.}
 \item{legend.cex}{Size of the legend text.}
 
 \item{main}{Title of the plot.
-If \code{main = NULL} (default), \code{time = xx} is used for the time-dependent results,
+If \code{main = NULL} (default), \code{time = xx} is used for the time-dependent results
+(\code{"Time-dependent SROC curves"} when \code{overlay = TRUE}),
 and no title for the results from \code{srocsa.t}.}
 
 \item{xlab}{Label of x-axis.}
@@ -101,7 +112,7 @@ and no title for the results from \code{srocsa.t}.}
 \code{x}, invisibly. Called for the side effect of plotting.
 }
 \description{
-Plot method for 'srocsa' objects
+Plot method for 'srocsa' objects.
 This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p},
 from the sensitivity analysis by \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
 For \code{\link{srocsa.t}}, one plot is created.
@@ -109,6 +120,8 @@ For \code{\link{tsrocsa.lrt}}, one plot is created at each time point, with the 
 in an interactive session the user is prompted ("Hit <Return> to see next plot")
 before each new time point.
 The same \eqn{p} has the same color and line type at all the time points.
+Alternatively, all the time points can be overlaid in one panel (\code{overlay = TRUE}):
+the color indicates the time point and the line type indicates \eqn{p}.
 }
 \details{
 For \eqn{p < 1} in \code{\link{tsrocsa.lrt}}, the SROC curve is calculated from
@@ -130,8 +143,10 @@ plot(fit1, p = c(1, 0.6), plot.ci = TRUE, sroc.cols = c("black", "red"))
 
 \donttest{
 ## time-dependent results (see ?tsrocsa.lrt for fit2)
-## plot(fit2)               # one plot per time point; press <Return> for the next
-## plot(fit2, time = 60)    # one time point
+## plot(fit2)                           # one plot per time point; press <Return> for the next
+## plot(fit2, time = 60)                # one time point
+## plot(fit2, overlay = TRUE)           # all time points in one panel (color: time, line type: p)
+## plot(fit2, overlay = TRUE, p = 0.8)  # all time points for one p
 }
 
 }

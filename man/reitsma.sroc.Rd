@@ -56,7 +56,7 @@ Bad initial values and bounds may cause non-convergence.
   }}
 }
 \value{
-The output of \code{\link[stats]{nlminb}}
+An object of class \code{"sroc"}: the output of \code{\link[stats]{nlminb}}
 (\code{par} is \code{(mu1, mu2, tau1, tau2, rho)}; \code{tau1} and \code{tau2} are standard deviations)
 with the following additional elements.
 If \code{\link[stats]{nlminb}} failed, an object of class \code{"try-error"}.
@@ -71,6 +71,8 @@ and of the sensitivity and specificity.}
 specificity (\code{y2}) and their within-study variances (\code{v1}, \code{v2}),
 used by \code{\link{plot.sroc}} to add the studies (\code{add.study = TRUE}).}
 }
+The call and \code{ci.level} are kept in the attributes \code{"call"} and \code{"ci.level"}.
+The results can be shown by \code{\link{print.sroc}}, \code{\link{summary.sroc}}, and \code{\link{plot.sroc}}.
 }
 \description{
 This function fits the bivariate random-effects model of the logit-transformed
@@ -90,6 +92,15 @@ Publication bias is not considered.
 data(IVD)
 
 fit <- reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+
+## main results
+fit
+
+## estimates with SEs and confidence intervals
+print(fit)
+summary(fit)
+
+## elements of the fitted model
 fit$par.all
 fit$sauc.ci
 
@@ -110,6 +121,9 @@ Bivariate analysis of sensitivity and specificity produces informative summary m
 \doi{10.1016/j.jclinepi.2005.02.022}
 }
 \seealso{
-\code{\link{srocsa.t}},
-\code{\link{sauc}}
+\code{\link{print.sroc}},
+\code{\link{summary.sroc}},
+\code{\link{plot.sroc}},
+\code{\link{sauc}},
+\code{\link{srocsa.t}}
 }

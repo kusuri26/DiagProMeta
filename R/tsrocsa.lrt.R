@@ -137,13 +137,21 @@
 #'   senp.p = c(1, 0.8)
 #' )
 #' fit
-#' f1 <- fit[[1]][["1"]]      # p = 1
-#' f8 <- fit[[1]][["0.8"]]    # p < 1 (use one of your senp.p values)
-#' f1$par; f1$par.all
-#' f8$par; f8$par.all
-#' dim(f8$var.ml)
-
-#' plot(fit)
+#'
+#'
+#' ##
+#' print(fit)
+#' summary(fit)
+#'
+#' ## plots
+#' plot(fit, ask = FALSE)                       # all time points, one per page, no prompt
+#' plot(fit, time = 36, add.study = TRUE)       # one time point with the studies
+#' plot(fit, overlay = TRUE)                    # all time points in one panel
+#'
+#' \donttest{
+#' ## interactive: press <Return> to move to the next time point
+#' if (interactive()) plot(fit, add.study = TRUE, study.size = "precision")
+#' }
 #'
 #'
 #' @seealso

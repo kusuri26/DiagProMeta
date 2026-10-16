@@ -40,11 +40,14 @@
 #' \code{study.lnhr}, \code{lnhr}, and \code{var.lnHR} are required as input,
 #' but lnHR is not used in the estimation of this function.
 #'
-#' @return An object of class \code{"srocsa"}:
-#' a list with one element for each time point (named by \code{time.points}).
+#' @return An object of class \code{"sroc"}:
+#' a list with one element for each time point (named \code{"t = xx"}).
 #' Each element is the same as the output of \code{\link{reitsma.sroc}}
-#' (its \code{data} element also contains the within-study covariance \code{v12}).
-#' The results can be shown by \code{\link{print.srocsa}}, \code{\link{summary.srocsa}}, and \code{\link{plot.srocsa}}.
+#' (its \code{data} element also contains the within-study covariance \code{v12}),
+#' or an object of class \code{"try-error"} if the estimation failed at that time point.
+#' The attributes \code{"call"}, \code{"ci.level"}, and \code{"n.study"} (the number of studies
+#' at each time point) are used by the methods.
+#' The results can be shown by \code{\link{print.sroc}}, \code{\link{summary.sroc}}, and \code{\link{plot.sroc}}.
 #'
 #' @references
 #' Hattori, S., & Zhou, X.-H. (2016).
@@ -81,22 +84,29 @@
 #'   data.mt = Ki67_MT
 #' )
 #'
+#' ## main results: one row for each time point
 #' fit
 #'
-#' plot(fit, ask = FALSE)                           # plot all time points, no prompt
-#' plot(fit, time = 36)                              # one time point
-#' \dontrun{
-#' plot(fit)
-#' plot(fit, add.study = TRUE, study.size = "precision")      # each time point's own studies
+#' ## estimates with SEs and confidence intervals at each time point
+#' print(fit)
+#' summary(fit)
+#'
+#' ## plots
+#' plot(fit, ask = FALSE)                       # all time points, one per page, no prompt
+#' plot(fit, time = 36, add.study = TRUE)       # one time point with the studies
+#' plot(fit, overlay = TRUE)                    # all time points in one panel
+#'
+#' \donttest{
+#' ## interactive: press <Return> to move to the next time point
+#' if (interactive()) plot(fit, add.study = TRUE, study.size = "precision")
 #' }
-#' plot(fit, overlay = TRUE, add.study = TRUE)      # colored by time point
-
 #'
 #' @seealso
-#' \code{\link{tsrocsa.lrt}},
-#' \code{\link{print.srocsa}},
-#' \code{\link{summary.srocsa}},
-#' \code{\link{plot.srocsa}}
+#' \code{\link{print.sroc}},
+#' \code{\link{summary.sroc}},
+#' \code{\link{plot.sroc}},
+#' \code{\link{reitsma.sroc}},
+#' \code{\link{tsrocsa.lrt}}
 #'
 #' @export
 hattori.tsroc <- function(
@@ -109,6 +119,7 @@ hattori.tsroc <- function(
   parset = list()
     ){
 
+  this.call <- match.call()
 
   #### data.os
   inputs <- resolve_inputs(
@@ -211,17 +222,13 @@ hattori.tsroc <- function(
     cl <- parallel::makeCluster(parallel.ncores, type = "PSOCK")
     on.exit(parallel::stopCluster(cl), add = TRUE)
 
+    ## envir = environment(): the package functions are found through the namespace
+    ## (not in .GlobalEnv when the package is installed)
     parallel::clusterExport(
       cl,
-      varlist = c("f", "convert.dt.tsroc", "meta.sroc.mle", "sroc.init"),
+      varlist = c("f", "convert.dt.tsroc", "cens.eta", "meta.sroc.mle", "sroc.init",
+                  "resolve_inputs", "default.parset.sroc"),
       envir = environment()
-    )
-
-    ## These functions were defined outside metacont.pb(), usually in .GlobalEnv
-    parallel::clusterExport(
-      cl,
-      varlist = c("resolve_inputs", "default.parset.sroc"),
-      envir = .GlobalEnv
     )
 
     res <- parallel::parLapply(
@@ -233,23 +240,15 @@ hattori.tsroc <- function(
 
   }
 
-# res$call <- this.call
-
   class(res) <- "sroc"
   names(res) <- paste0("t = ", time.points)
 
   ## information for print/summary/plot methods
-  attr(res, "type")    <- "sroc"
-  attr(res, "n.study") <- vapply(time.points, function(tt) sum(data.os$time.os == tt, na.rm = TRUE), numeric(1))
+  attr(res, "type")     <- "sroc"
+  attr(res, "call")     <- this.call
+  attr(res, "ci.level") <- ci.level
+  attr(res, "n.study")  <- vapply(time.points, function(tt) sum(data.os$time.os == tt, na.rm = TRUE), numeric(1))
 
   return(res)
-
-# setClass(
-
-#   Class = "tdsameta",
-
-#   slot=c(data="data.frame",par="matrix",var.matrix="list")
-
-# )
 
 }

@@ -1,7 +1,7 @@
-#' @title Plot the sensitivitya analysis of the SROC curves
+#' @title Plot the sensitivity analysis of the SROC curves
 #'
 #' @description
-#' Plot method for 'srocsa' objects
+#' Plot method for 'srocsa' objects.
 #' This function plots the SROC curves and the summary points for each marginal selection probability \eqn{p},
 #' from the sensitivity analysis by \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
 #' For \code{\link{srocsa.t}}, one plot is created.
@@ -9,6 +9,8 @@
 #' in an interactive session the user is prompted ("Hit <Return> to see next plot")
 #' before each new time point.
 #' The same \eqn{p} has the same color and line type at all the time points.
+#' Alternatively, all the time points can be overlaid in one panel (\code{overlay = TRUE}):
+#' the color indicates the time point and the line type indicates \eqn{p}.
 #'
 #' @param x
 #' A fitted object returned by the function \code{\link{srocsa.t}} or \code{\link{tsrocsa.lrt}}.
@@ -21,12 +23,18 @@
 #' Values of the marginal selection probability \eqn{p} to plot.
 #' If \code{p = NULL} (default), all the values are plotted.
 #'
+#' @param overlay Logical; if \code{TRUE}, all the selected time points of \code{\link{tsrocsa.lrt}}
+#' are drawn in one panel (ignored for \code{\link{srocsa.t}}, which has one panel).
+#'
 #' @param ask Logical; whether to wait for <Return> before each new time point.
 #' Default \code{NULL} means \code{TRUE} when more than one plot is drawn on an interactive device.
 #'
-#' @param sroc.cols Colors of the SROC curves, one for each \eqn{p}.
-#' Default uses grey colors (black for the first \eqn{p}).
+#' @param sroc.cols Colors of the SROC curves: one for each \eqn{p},
+#' or one for each time point when \code{overlay = TRUE}.
+#' Default uses grey colors (black for the first \eqn{p}), and
+#' \code{\link[grDevices]{hcl.colors}} (palette \code{"Dark 3"}) for the time points when \code{overlay = TRUE}.
 #' @param sroc.lty Line types of the SROC curves, recycled over \eqn{p}.
+#' When \code{overlay = TRUE} and it is not specified, \code{1, 2, 3, ...} are used for the values of \eqn{p}.
 #' @param sroc.lwd Line width of the SROC curves.
 #'
 #' @param add.spoint Whether to add the summary points on the SROC curves.
@@ -44,7 +52,9 @@
 #' stored in the attribute \code{"data"} of \code{x}.
 #' @param study.size Size of the study points: \code{"fixed"} (default) or \code{"precision"},
 #' proportional to \eqn{1/\sqrt{v_1 + v_2}}{1/sqrt(v1 + v2)} relative to its mean.
-#' @param study.pch,study.cex,study.col Symbol, (base) size, and color of the study points.
+#' @param study.pch,study.cex Symbol and (base) size of the study points.
+#' @param study.col Color of the study points. Default \code{NULL} uses grey,
+#' or the (semi-transparent) color of each time point when \code{overlay = TRUE}.
 #'
 #' @param add.sauc Whether to show the SAUC (and its CI) for each \eqn{p} in the legend.
 #' @param legend.pos Position of the legend. See \code{\link[graphics]{legend}}.
@@ -52,7 +62,8 @@
 #' @param legend.cex Size of the legend text.
 #'
 #' @param main Title of the plot.
-#' If \code{main = NULL} (default), \code{time = xx} is used for the time-dependent results,
+#' If \code{main = NULL} (default), \code{time = xx} is used for the time-dependent results
+#' (\code{"Time-dependent SROC curves"} when \code{overlay = TRUE}),
 #' and no title for the results from \code{srocsa.t}.
 #' @param xlab Label of x-axis.
 #' @param ylab Label of y-axis.
@@ -65,7 +76,7 @@
 #' \eqn{(\mu_1, \mu_2, \tau_1, \tau_2, \rho_1)}{(mu1, mu2, tau1, tau2, rho1)} of the trivariate model,
 #' i.e., the parameters of the logit-transformed sensitivity and specificity.
 #'
-#' @importFrom grDevices gray.colors dev.interactive devAskNewPage
+#' @importFrom grDevices gray.colors dev.interactive devAskNewPage hcl.colors adjustcolor
 #' @importFrom graphics legend
 #'
 #' @examples
@@ -83,8 +94,10 @@
 #'
 #' \donttest{
 #' ## time-dependent results (see ?tsrocsa.lrt for fit2)
-#' ## plot(fit2)               # one plot per time point; press <Return> for the next
-#' ## plot(fit2, time = 60)    # one time point
+#' ## plot(fit2)                           # one plot per time point; press <Return> for the next
+#' ## plot(fit2, time = 60)                # one time point
+#' ## plot(fit2, overlay = TRUE)           # all time points in one panel (color: time, line type: p)
+#' ## plot(fit2, overlay = TRUE, p = 0.8)  # all time points for one p
 #' }
 #'
 #' @seealso
@@ -100,6 +113,7 @@ plot.srocsa <- function(
   x,
   time = NULL,
   p = NULL,
+  overlay = FALSE,
   ask = NULL,
   sroc.cols = NULL,
   sroc.lty = 1,
@@ -116,7 +130,7 @@ plot.srocsa <- function(
   study.size = c("fixed", "precision"),
   study.pch = 1,
   study.cex = 1,
-  study.col = "grey55",
+  study.col = NULL,
   add.sauc = TRUE,
   legend.pos = "bottomright",
   legend.cex = 0.85,
@@ -167,19 +181,20 @@ plot.srocsa <- function(
     ltys[match(p.sel, p.all)] <- sroc.lty
   }
 
+  ## overlay only makes sense for several time points ----
+  overlay <- isTRUE(overlay) && is.td
+
   ## <Return> prompt between time points ----
-  if (!is.null(main)) main <- rep_len(main, length(panels))
-  if (is.null(ask)) ask <- length(panels) > 1 && dev.interactive()
+  n.pages <- if (overlay) 1L else length(panels)
+  if (!is.null(main)) main <- rep_len(main, n.pages)
+  if (is.null(ask)) ask <- n.pages > 1 && dev.interactive()
   if (ask) {
     old.ask <- devAskNewPage(TRUE)
     on.exit(devAskNewPage(old.ask), add = TRUE)
   }
 
-  for (i in seq_along(panels)) {
-
-    b <- panels[[i]]
-
-    ## curves to draw in this panel
+  ## curves to draw in a panel: selected p and successful fits ----
+  use.of <- function(b) {
     use <- which(vapply(b$p, function(v) any(abs(v - p.sel) < 1e-8), logical(1)))
     ok  <- vapply(b$fits[use], .sroc_fit_ok, logical(1))
     if (any(!ok)) {
@@ -187,41 +202,93 @@ plot.srocsa <- function(
               if (!is.null(b$time)) paste0(" at time = ", b$time),
               "; these curves are skipped.", call. = FALSE)
     }
-    use <- use[ok]
+    use[ok]
+  }
 
-    main.i <- if (!is.null(main)) main[i] else if (!is.null(b$time)) paste0("time = ", b$time) else NULL
-    .sroc_frame(xlab, ylab, main.i, ...)
+  draw.one <- function(fit, col, lty) {
+    .sroc_draw(fit, col = col, lty = lty, lwd = sroc.lwd,
+               plot.ci = plot.ci, ci.lty = ci.lty, ci.lwd = ci.lwd,
+               add.spoint = add.spoint, spoint.region = spoint.region,
+               sp.pch = sp.pch, sp.cex = sp.cex,
+               ci.level = ci.level, n.grid = n.grid)
+  }
 
-    if (length(use) == 0) {
-      warning("No SROC curve to plot", if (!is.null(b$time)) paste0(" at time = ", b$time),
-              call. = FALSE)
-      next
-    }
+  sauc.lab <- function(fits) vapply(fits, .sroc_sauc_label, character(1))
 
-    if (add.study) {
-      .sroc_draw_studies(b$data, col = study.col, study.size = study.size,
-                         study.pch = study.pch, study.cex = study.cex)
-    }
+  if (overlay) {
 
-    j.col <- match(round(b$p[use], 10), round(p.all, 10))
-    for (m in seq_along(use)) {
-      .sroc_draw(b$fits[[use[m]]], col = cols[j.col[m]],
-                 lty = ltys[j.col[m]], lwd = sroc.lwd,
-                 plot.ci = plot.ci, ci.lty = ci.lty, ci.lwd = ci.lwd,
-                 add.spoint = add.spoint, spoint.region = spoint.region,
-                 sp.pch = sp.pch, sp.cex = sp.cex,
-                 ci.level = ci.level, n.grid = n.grid)
-    }
+    ## ---------- all time points in one panel: color = time, line type = p ----------
+    kt    <- length(panels)
+    tcols <- if (is.null(sroc.cols)) hcl.colors(kt, palette = "Dark 3") else rep_len(sroc.cols, kt)
+    ## line type for each p: 1, 2, ... over the selected p (solid when only one p),
+    ## or the user's sroc.lty (same rule as the panel mode)
+    plty  <- ltys
+    if (missing(sroc.lty)) plty[match(p.sel, p.all)] <- seq_along(p.sel)
 
-    if (!is.null(legend.pos)) {
-      lab <- paste0("p = ", b$p[use])
-      if (add.sauc) {
-        lab <- paste0(lab, ": ", vapply(b$fits[use], .sroc_sauc_label, character(1)))
+    .sroc_frame(xlab, ylab, if (!is.null(main)) main[1] else "Time-dependent SROC curves", ...)
+
+    leg.lab <- character(0); leg.col <- character(0); leg.lty <- numeric(0)
+
+    for (i in seq_along(panels)) {
+      b   <- panels[[i]]
+      use <- use.of(b)
+      if (length(use) == 0) {
+        warning("No SROC curve to plot at time = ", b$time, call. = FALSE)
+        next
       }
-      legend(legend.pos, legend = lab,
-             col = cols[j.col], lty = ltys[j.col], lwd = sroc.lwd,
-             pch = if (add.spoint) sp.pch else NA,
-             bty = "n", cex = legend.cex)
+      if (add.study) {
+        .sroc_draw_studies(b$data,
+                           col = if (is.null(study.col)) adjustcolor(tcols[i], alpha.f = 0.5) else rep_len(study.col, kt)[i],
+                           study.size = study.size, study.pch = study.pch, study.cex = study.cex)
+      }
+      j.p <- match(round(b$p[use], 10), round(p.all, 10))
+      for (m in seq_along(use)) draw.one(b$fits[[use[m]]], col = tcols[i], lty = plty[j.p[m]])
+
+      lab <- paste0("time = ", b$time, if (length(p.sel) > 1 || length(use) > 1) paste0(", p = ", b$p[use]))
+      if (add.sauc) lab <- paste0(lab, ": ", sauc.lab(b$fits[use]))
+      leg.lab <- c(leg.lab, lab)
+      leg.col <- c(leg.col, rep(tcols[i], length(use)))
+      leg.lty <- c(leg.lty, plty[j.p])
+    }
+
+    if (!is.null(legend.pos) && length(leg.lab)) {
+      legend(legend.pos, legend = leg.lab, col = leg.col, lty = leg.lty, lwd = sroc.lwd,
+             pch = if (add.spoint) sp.pch else NA, bty = "n", cex = legend.cex)
+    }
+
+  } else {
+
+    ## ---------- one panel per time point: color / line type = p ----------
+    for (i in seq_along(panels)) {
+
+      b   <- panels[[i]]
+      use <- use.of(b)
+
+      main.i <- if (!is.null(main)) main[i] else if (!is.null(b$time)) paste0("time = ", b$time) else NULL
+      .sroc_frame(xlab, ylab, main.i, ...)
+
+      if (length(use) == 0) {
+        warning("No SROC curve to plot", if (!is.null(b$time)) paste0(" at time = ", b$time),
+                call. = FALSE)
+        next
+      }
+
+      if (add.study) {
+        .sroc_draw_studies(b$data, col = if (is.null(study.col)) "grey55" else study.col,
+                           study.size = study.size, study.pch = study.pch, study.cex = study.cex)
+      }
+
+      j.col <- match(round(b$p[use], 10), round(p.all, 10))
+      for (m in seq_along(use)) draw.one(b$fits[[use[m]]], col = cols[j.col[m]], lty = ltys[j.col[m]])
+
+      if (!is.null(legend.pos)) {
+        lab <- paste0("p = ", b$p[use])
+        if (add.sauc) lab <- paste0(lab, ": ", sauc.lab(b$fits[use]))
+        legend(legend.pos, legend = lab,
+               col = cols[j.col], lty = ltys[j.col], lwd = sroc.lwd,
+               pch = if (add.spoint) sp.pch else NA,
+               bty = "n", cex = legend.cex)
+      }
     }
   }
 

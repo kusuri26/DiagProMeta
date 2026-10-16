@@ -2,8 +2,11 @@
 
 S3method(plot,sroc)
 S3method(plot,srocsa)
+S3method(print,sroc)
 S3method(print,srocsa)
+S3method(print,summary.sroc)
 S3method(print,summary.srocsa)
+S3method(summary,sroc)
 S3method(summary,srocsa)
 export(default.parset.sroc)
 export(default.parset.tsroc.pb)

@@ -32,7 +32,7 @@
 #' \item{Continuity correction}{\url{https://en.wikipedia.org/wiki/Continuity_correction}}
 #' }
 #'
-#' @return The output of \code{\link[stats]{nlminb}}
+#' @return An object of class \code{"sroc"}: the output of \code{\link[stats]{nlminb}}
 #' (\code{par} is \code{(mu1, mu2, tau1, tau2, rho)}; \code{tau1} and \code{tau2} are standard deviations)
 #' with the following additional elements.
 #' If \code{\link[stats]{nlminb}} failed, an object of class \code{"try-error"}.
@@ -47,6 +47,8 @@
 #' specificity (\code{y2}) and their within-study variances (\code{v1}, \code{v2}),
 #' used by \code{\link{plot.sroc}} to add the studies (\code{add.study = TRUE}).}
 #' }
+#' The call and \code{ci.level} are kept in the attributes \code{"call"} and \code{"ci.level"}.
+#' The results can be shown by \code{\link{print.sroc}}, \code{\link{summary.sroc}}, and \code{\link{plot.sroc}}.
 #'
 #' @references
 #' Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH (2005).
@@ -59,6 +61,15 @@
 #' data(IVD)
 #'
 #' fit <- reitsma.sroc(TP = TP, FN = FN, FP = FP, TN = TN, data = IVD)
+#'
+#' ## main results
+#' fit
+#'
+#' ## estimates with SEs and confidence intervals
+#' print(fit)
+#' summary(fit)
+#'
+#' ## elements of the fitted model
 #' fit$par.all
 #' fit$sauc.ci
 #'
@@ -72,8 +83,11 @@
 #' plot(fit, add.study = TRUE, study.size = "precision")    # size is proportional to 1/sqrt(v1 + v2)
 #'
 #' @seealso
-#' \code{\link{srocsa.t}},
-#' \code{\link{sauc}}
+#' \code{\link{print.sroc}},
+#' \code{\link{summary.sroc}},
+#' \code{\link{plot.sroc}},
+#' \code{\link{sauc}},
+#' \code{\link{srocsa.t}}
 #'
 #' @export
 reitsma.sroc <- function(
@@ -84,6 +98,7 @@ reitsma.sroc <- function(
   ci.level = 0.95,
   parset = list()
 ) {
+  this.call <- match.call()
   cc.type <- match.arg(cc.type)
   inputs <- resolve_inputs(
     exprs = list(
@@ -118,12 +133,13 @@ reitsma.sroc <- function(
                            v1 = data.conv$v1, v2 = data.conv$v2)
   }
 
-  class(res) <- "sroc"
-  # names(res) <- time.points
+  class(res) <- if (inherits(res, "try-error")) c("sroc", "try-error") else "sroc"
 
   ## information for print/summary/plot methods
-  attr(res, "type")    <- "sroc"
-  # attr(res, "n.study") <- vapply(time.points, function(tt) sum(data.os$time.os == tt, na.rm = TRUE), numeric(1))
+  attr(res, "type")     <- "sroc"
+  attr(res, "call")     <- this.call
+  attr(res, "ci.level") <- ci.level
+  attr(res, "n.study")  <- length(data.conv$y1)
 
   return(res)
 

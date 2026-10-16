@@ -1,57 +1,91 @@
-#' @title Print the summary of 'srocsa'
+#' @title Print the summary of 'sroc' objects
 #'
-#' @description Print the summary of 'srocsa':
-#' the main results (see \code{\link{print.srocsa}}) and the estimates of all the parameters
-#' (\code{par.all}) of the fitted models.
+#' @description Print the summary of the results of \code{\link{reitsma.sroc}} or
+#' \code{\link{hattori.tsroc}}; see \code{\link{summary.sroc}}.
+#' For \code{\link{hattori.tsroc}}, the results are printed for each time point.
+#'
 #' @param x
-#' An object returned by the function \code{summary.srocsa}.
+#' An object returned by the function \code{\link{summary.sroc}}.
 #' @param digits
-#' The digits of the results
+#' The number of decimal places of the results.
 #' @param ...
-#' Other arguments in function \code{\link{print.default}}
-#' @method print summary.srocsa
-#' @return Print the summary of a srocsa object
-#' @export
+#' Other arguments in function \code{\link{print.default}}.
 #'
-print.summary.srocsa <- function(x, digits = 3, ...) {
+#' @return \code{x}, invisibly. Called for the side effect of printing.
+#'
+#' @seealso
+#' \code{\link{summary.sroc}}
+#'
+#' @method print summary.sroc
+#' @export
+print.summary.sroc <- function(x, digits = 3, ...) {
+
+  rule <- function(ch = "=") cat(strrep(ch, 60), "\n", sep = "")
+  pc   <- paste0(round(100 * x$ci.level), "% CI")
+
+  .sroc_print_header(x$time.dependent)
 
   if (!is.null(x$call)) {
-    cat("Input:\n")
+    cat("Call:\n")
     print(x$call)
     cat("\n")
   }
 
-  ## main results ----
-  for (b in x$blocks) .srocsa.print.block(b, digits = digits)
+  for (i in seq_along(x$fits)) {
 
-  ## all the estimates (par.all) of the fitted models ----
-  cat("==================================================\n")
-  cat("All elements of the fitted models\n")
-  cat("==================================================\n\n")
+    s <- x$fits[[i]]
 
-  ## wrap par.all at the width of the rules (50 characters)
-  op <- options(width = 50)
-  on.exit(options(op), add = TRUE)
+    rule("=")
+    if (x$time.dependent) cat(names(x$fits)[i], "\n", sep = "") else cat("Results\n")
+    rule("=")
 
-  for (b in x$blocks) {
-    for (i in seq_along(b$fits)) {
+    if (!s$ok) {
+      cat("Estimation failed", if (nzchar(s$message)) paste0(": ", s$message), "\n\n", sep = "")
+      next
+    }
 
-      cat("--------------------------------------------------\n")
-      cat(if (!is.null(b$time)) paste0("time = ", b$time, ", "), "p = ", b$p[i], "\n", sep = "")
-      cat("--------------------------------------------------\n")
+    cat("Number of studies: ", .na_chr(s$K), "\n", sep = "")
+    cat("Convergence:       ", if (s$conv) "yes" else "NO", " (", s$message, ")\n", sep = "")
+    cat("Log-likelihood:    ", .fmt(s$logLik, digits), "\n\n", sep = "")
 
-      fit <- b$fits[[i]]
+    ## parameters
+    cat("Parameters (tau1, tau2: between-study SDs; rho: correlation)\n")
+    rule("-")
+    cf <- s$coef
+    tab <- cbind(
+      Estimate = .fmt(cf[, "Estimate"], digits),
+      SE       = .fmt(cf[, "SE"], digits),
+      CI       = ifelse(is.finite(cf[, "lower"]) & is.finite(cf[, "upper"]),
+                        paste0("[", .fmt(cf[, "lower"], digits), ", ", .fmt(cf[, "upper"], digits), "]"),
+                        "-")
+    )
+    colnames(tab)[3] <- pc
+    rownames(tab) <- rownames(cf)
+    print(tab, quote = FALSE, right = TRUE, ...)
+    if (all(!is.finite(cf[, "SE"]))) cat("(SEs are not available: var.ml is missing or not finite)\n")
+    cat("\n")
 
-      if (!is.list(fit) || is.null(fit$par.all)) {
-        cat("Estimation failed\n\n")
-        next
-      }
+    ## summary measures
+    cat("Summary measures\n")
+    rule("-")
+    sm <- rbind(Sensitivity = s$sens, Specificity = s$spec, SAUC = s$sauc)
+    tab2 <- cbind(
+      Estimate = .fmt(sm[, 1], digits),
+      CI = ifelse(is.finite(sm[, 2]) & is.finite(sm[, 3]),
+                  paste0("[", .fmt(sm[, 2], digits), ", ", .fmt(sm[, 3], digits), "]"), "-")
+    )
+    colnames(tab2)[2] <- pc
+    print(tab2, quote = FALSE, right = TRUE, ...)
+    cat("\n")
 
-      print(round(fit$par.all, digits), ...)
+    ## all estimates
+    if (!is.null(s$par.all)) {
+      cat("All estimates (par.all)\n")
+      rule("-")
+      print(round(s$par.all, digits), ...)
       cat("\n")
     }
   }
 
   invisible(x)
-
 }
